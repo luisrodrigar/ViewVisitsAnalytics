@@ -1,12 +1,16 @@
 package main.java.es.uniovi.innova;
 
 import java.io.IOException;
+
 import javax.portlet.GenericPortlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
+import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.ga.IPortalesService;
+import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
 import main.java.es.uniovi.innova.services.ga.implementation.portales.APILiferayPortalesDAO;
 
 public class VisitsPortlet extends GenericPortlet {
@@ -15,8 +19,10 @@ public class VisitsPortlet extends GenericPortlet {
 	public void doView(RenderRequest request, RenderResponse response)
 			throws PortletException, IOException {
 		IPortalesService portalService = new APILiferayPortalesDAO();
+		IGAService gaService = new GAnalyticsService();
 		request.setAttribute("mapPortal", portalService.getPortales());
-		
+		request.setAttribute("numVisitas", gaService.numOfVisitsByDay(6, 1, 2014));
+		System.out.println("Numero de visitas: " + gaService.numOfVisitsByDay(6, 1, 2014) );
 		include("/html/view.jsp", request, response);
 	}
 	
