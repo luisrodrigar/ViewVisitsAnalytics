@@ -4,6 +4,7 @@ package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 import com.google.api.services.analytics.model.Profiles;
 import com.google.api.services.analytics.model.Webproperties;
 import com.google.api.services.analytics.model.Webproperty;
+
 
 public class GAnalyticsService implements IGAService {
 
@@ -54,17 +56,37 @@ public class GAnalyticsService implements IGAService {
 	private static final Collection<String> SCOPE = Collections
 			.singleton(AnalyticsScopes.ANALYTICS_READONLY);
 	private static final String APPLICATION_NAME = "Visits";
-
+	
+	private String UA;
+	
 	@Override
 	public int numOfVisitsByDay(int day, int month, int year) {
 		String startDate = year + "-" + getStringNumber(month) + "-" + getStringNumber(day);
 		String endDate = startDate;
+		return calculateVisits(startDate, endDate);
+	}
+
+	@Override
+	public int numOfVisitsByMonth(int month, int year) {
+		String startDate = year + "-" + getStringNumber(month) + "-01";
+		String endDate = year + "-" + getStringNumber(month) + "-" + getStringNumber(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
+		return calculateVisits(startDate, endDate);
+	}
+
+	@Override
+	public int numOfVisitsByYear(int year) {
+		String startDate = year + "-01-01";
+		String endDate = year+1 + "-01-01";
+		return calculateVisits(startDate, endDate);
+	}
+	
+	private int calculateVisits(String startDate, String endDate){
 		int visits = 0;
 		try {
 		      TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 		      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
 		      Analytics analytics = initializeAnalytics();
-		      String profileId = getFirstProfileId(analytics, "UA-57349981-1");
+		      String profileId = getFirstProfileId(analytics, UA);
 		      if (profileId == null) {
 		        System.err.println("No profiles found.");
 		      } else {
@@ -80,23 +102,11 @@ public class GAnalyticsService implements IGAService {
 		    }
 		return visits;
 	}
-	
+
 	private String getStringNumber(int number){
-		return (String) (number<10? "0"+number: " " + number);
+		return (String) (number<10? "0"+number: "" + number);
 	}
-
-	@Override
-	public int numOfVisitsByMonth(int month, int year) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int numOfVisitsByYear(int year) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	
 	private static Credential authorize() throws IOException {
 		// set up authorization code flow
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -190,5 +200,13 @@ public class GAnalyticsService implements IGAService {
 	      System.out.println();
 	    }
 	  }
+
+	public String getUA() {
+		return UA;
+	}
+
+	public void setUA(String uA) {
+		UA = uA;
+	}
 
 }

@@ -21,7 +21,6 @@ public class APILiferayPortalesDAO implements IPortalesService {
 			for (Group group: listaGrupos) {
 				String name = group.getDescriptiveName();
 				String idGoogleAnalytics = group.getTypeSettingsProperties().getProperty("googleAnalyticsId");
-				System.out.println(name + "\t" + idGoogleAnalytics);
 				if(idGoogleAnalytics!=null)
 					mapPortal.put(name, idGoogleAnalytics);
 			}
