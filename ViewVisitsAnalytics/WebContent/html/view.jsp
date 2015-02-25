@@ -7,7 +7,7 @@
 	<h3>Portales</h3>
 	<ul>
 	<%for(String portal: map.keySet()) {%>
-		<li>${portal} - ${map.get(portal)}</li>
+		<li><%=portal %> - <%=map.get(portal) %></li>
 	<%} %>
 	</ul>
 </div>
