@@ -40,27 +40,15 @@ public class VisitsPortlet extends GenericPortlet {
 	
 
 	@Override
-	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
-		System.out.println("Aquiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-		setDateValues(actionRequest);
-//		actionResponse.setRenderParameter("jspPage",
-//				"/view.jsp");
+	public void processAction(ActionRequest actionrequest, ActionResponse actionResponse) {
 
-	}
-	private void setDateValues(ActionRequest actionrequest) {
 		int monthStart = Integer.parseInt(actionrequest.getParameter("month_start"));
 		int dayStart = Integer.parseInt(actionrequest.getParameter("day_start"));
 		int yearStart = Integer.parseInt(actionrequest.getParameter("year_start"));
 		int monthEnd = Integer.parseInt(actionrequest.getParameter("month_end"));
 		int dayEnd = Integer.parseInt(actionrequest.getParameter("day_end"));
 		int yearEnd = Integer.parseInt(actionrequest.getParameter("year_end"));
-//		String monthStart = actionrequest.getParameter("month_start");
-//		String dayStart = actionrequest.getParameter("day_start");
-//		String yearStart = actionrequest.getParameter("year_start");
-//		String monthEnd =  actionrequest.getParameter("month_end");
-//		String dayEnd = actionrequest.getParameter("day_end");
-//		String yearEnd = actionrequest.getParameter("year_end");
-		
+
 		
 		IGAService gaService = new GAnalyticsService();
 		gaService.setUA("UA-376062-58");
@@ -68,9 +56,10 @@ public class VisitsPortlet extends GenericPortlet {
 		int valor =  gaService
 				.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
 						dayEnd, monthEnd, yearEnd);
-		System.out.println("EL NUMERO ES :" + valor);
+		
 		actionrequest.setAttribute("numVisitasIntervalo",valor);
 	}
+
 
 	protected void include(String path, RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
