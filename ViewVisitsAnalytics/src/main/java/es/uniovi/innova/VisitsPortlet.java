@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
-import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
 import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.ga.IPortalesService;
 import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
@@ -35,16 +32,24 @@ public class VisitsPortlet extends GenericPortlet {
 		include("/html/view.jsp", request, response);
 	}
 	
-	@ProcessAction(name = "getVisitsAction")
-	public void getVisitsAction(ActionRequest request, ActionResponse response)
-			throws PortletException, IOException, ParseException {
+	@Override
+	public void processAction(ActionRequest request, ActionResponse response)
+			throws PortletException, IOException {
 		String portalID = (String) request.getParameter("portal");
 		String inicio = (String) request.getParameter("fecha_inicio");
 		String fin = (String) request.getParameter("fecha_fin");
-		System.out.println(portalID);
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		Date fInicio = format.parse(inicio);
-		Date fFin = format.parse(fin);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date fInicio = null, fFin = null;
+		try {
+			fInicio = format.parse(inicio);
+			fFin = format.parse(fin);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		gaService.setUA(portalID);
+		request.setAttribute("id", portalID);
+		request.setAttribute("fInicio",fInicio);
+		request.setAttribute("fFin",fFin);
 		request.setAttribute("visits",gaService.numOfVisitsByInterval(fInicio, fFin));
 	}
 	

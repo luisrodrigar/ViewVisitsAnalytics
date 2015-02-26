@@ -237,7 +237,9 @@ public class GAnalyticsService implements IGAService {
 	 * @throws IOException
 	 */
 	private static GaData executeDataQuery(Analytics analytics, String profileId, String startDate, String endDate) throws IOException {
-	    return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: + profile id.
+	    System.out.println(startDate);
+	    System.out.println(endDate);
+		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: + profile id.
 	        startDate, // Start date.
 	        endDate, // End date.
 	        "ga:visits") // Metrics.
