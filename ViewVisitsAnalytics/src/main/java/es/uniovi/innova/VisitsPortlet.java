@@ -20,6 +20,7 @@ public class VisitsPortlet extends GenericPortlet {
 			throws PortletException, IOException {
 		IPortalesService portalService = new APILiferayPortalesDAO();
 		IGAService gaService = new GAnalyticsService();
+		gaService.setUA("UA-57349981-1");
 		request.setAttribute("mapPortal", portalService.getPortales());
 		request.setAttribute("numVisitas", gaService.numOfVisitsByDay(6, 1, 2014));
 		System.out.println("Numero de visitas: " + gaService.numOfVisitsByDay(6, 1, 2014) );

@@ -1,6 +1,5 @@
 package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -8,9 +7,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import main.java.es.uniovi.innova.services.ga.IGAService;
-
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -30,7 +27,11 @@ import com.google.api.services.analytics.model.Profiles;
 import com.google.api.services.analytics.model.Webproperties;
 import com.google.api.services.analytics.model.Webproperty;
 
-
+/**
+ * Class for getting information provided for Google Analytics
+ * @author luisrodrigar - DiiSandoval
+ *
+ */
 public class GAnalyticsService implements IGAService {
 
 	private static HttpTransport TRANSPORT;
@@ -46,7 +47,7 @@ public class GAnalyticsService implements IGAService {
 
 	static {
 		try {
-			Reader reader = new FileReader("client_secrets.json");
+			Reader reader = new FileReader("html/client_secrets.json");
 			clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 		} catch (IOException e) {
 			throw new Error("No client_secres.json found\n", e);
@@ -57,8 +58,15 @@ public class GAnalyticsService implements IGAService {
 			.singleton(AnalyticsScopes.ANALYTICS_READONLY);
 	private static final String APPLICATION_NAME = "Visits";
 	
+	// UA - the identificador was created by Google Analytics
 	private String UA;
 	
+	/**
+	 * Number of visits in one specific day
+	 * @param day - the day of a month
+	 * @param month - the month of a year
+	 * @param year - the concrete year
+	 */
 	@Override
 	public int numOfVisitsByDay(int day, int month, int year) {
 		String startDate = year + "-" + getStringNumber(month) + "-" + getStringNumber(day);
@@ -66,6 +74,11 @@ public class GAnalyticsService implements IGAService {
 		return calculateVisits(startDate, endDate);
 	}
 
+	/**
+	 * Number of visits during a specific month
+	 * @param month - the mont of a year
+	 * @param year - the concrete year
+	 */
 	@Override
 	public int numOfVisitsByMonth(int month, int year) {
 		String startDate = year + "-" + getStringNumber(month) + "-01";
@@ -73,20 +86,31 @@ public class GAnalyticsService implements IGAService {
 		return calculateVisits(startDate, endDate);
 	}
 
+	
+	/**
+	 * Number of visits during a specific year
+	 * @param year - the year to obtain the total visits
+	 */
 	@Override
 	public int numOfVisitsByYear(int year) {
 		String startDate = year + "-01-01";
-		String endDate = year+1 + "-01-01";
+		String endDate = year + "-12-31";
 		return calculateVisits(startDate, endDate);
 	}
 	
+	/**
+	 * Obtain the visits of a website between start and end date
+	 * @param startDate
+	 * @param endDate
+	 * @return visits
+	 */
 	private int calculateVisits(String startDate, String endDate){
 		int visits = 0;
 		try {
 		      TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 		      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
 		      Analytics analytics = initializeAnalytics();
-		      String profileId = getFirstProfileId(analytics, UA);
+		      String profileId = getProfileIdByUA(analytics, UA);
 		      if (profileId == null) {
 		        System.err.println("No profiles found.");
 		      } else {
@@ -103,10 +127,21 @@ public class GAnalyticsService implements IGAService {
 		return visits;
 	}
 
+	/**
+	 * If number less than 10, it will return: 0'number'
+	 * If number more than 9, the response is the number
+	 * @param number for checking
+	 * @return number checked
+	 */
 	private String getStringNumber(int number){
 		return (String) (number<10? "0"+number: "" + number);
 	}
 	
+	/**
+	 * Task about authorization on Google Analytics
+	 * @return Credentials
+	 * @throws IOException
+	 */
 	private static Credential authorize() throws IOException {
 		// set up authorization code flow
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -117,6 +152,11 @@ public class GAnalyticsService implements IGAService {
 				new LocalServerReceiver()).authorize("user");
 	}
 
+	/**
+	 * Authorizacition and connect to Google Analytics API
+	 * @return Analytics object
+	 * @throws Exception
+	 */
 	private static Analytics initializeAnalytics() throws Exception {
 		// Authorization.
 		Credential credential = authorize();
@@ -126,7 +166,14 @@ public class GAnalyticsService implements IGAService {
 				.setApplicationName(APPLICATION_NAME).build();
 	}
 	
-	private static String getFirstProfileId(Analytics analytics, String ua) throws IOException {
+	/**
+	 * Obtain the profile of the google analytics account
+	 * @param Analytics
+	 * @param Google Analytics id e.i. UA-XXXXX-Y
+	 * @return Profile
+	 * @throws IOException
+	 */
+	private static String getProfileIdByUA(Analytics analytics, String ua) throws IOException {
 	    String profileId = null;
 
 	    // Query accounts collection.
@@ -163,6 +210,15 @@ public class GAnalyticsService implements IGAService {
 	    return profileId;
 	  }
 	
+	/**
+	 * Query to execute for getting the info about the website
+	 * @param analytics - authorization and credentials
+	 * @param profileId - profile about the website to obtain the visits
+	 * @param startDate - initial date for starting to count the visits
+	 * @param endDate - end date for finishing to count the visits
+	 * @return the info about the visits of the profile
+	 * @throws IOException
+	 */
 	private static GaData executeDataQuery(Analytics analytics, String profileId, String startDate, String endDate) throws IOException {
 	    return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: + profile id.
 	        startDate, // Start date.
@@ -171,7 +227,12 @@ public class GAnalyticsService implements IGAService {
 	        .execute();
 	  }
 	
+	/**
+	 * Show the data about the name profile and the visits associated 
+	 * @param data about Google Analytics profile
+	 */
 	private static void printGaData(GaData results) {
+		//Print info about the Google Analytics profile
 	    System.out.println(
 	        "printing results for profile: " + results.getProfileInfo().getProfileName());
 	    System.out.println(
@@ -183,13 +244,13 @@ public class GAnalyticsService implements IGAService {
 	      System.out.println("No results Found.");
 	    } else {
 
-	      // Print column headers.
+	      // Print column headers, in this case, the visits
 	      for (ColumnHeaders header : results.getColumnHeaders()) {
 	        System.out.printf("%30s", header.getName());
 	      }
 	      System.out.println();
 
-	      // Print actual data.
+	      // Print the visits of the website
 	      for (List<String> row : results.getRows()) {
 	        for (String column : row) {
 	          System.out.printf("%30s", column);
@@ -201,10 +262,18 @@ public class GAnalyticsService implements IGAService {
 	    }
 	  }
 
+	/**
+	 * The Google Analytics ID for querying the visits of the website which has this ID
+	 * @return Google
+	 */
 	public String getUA() {
 		return UA;
 	}
 
+	/**
+	 * Allow to change the Google Analytics ID for querying visits of other web site.
+	 * @param uA
+	 */
 	public void setUA(String uA) {
 		UA = uA;
 	}

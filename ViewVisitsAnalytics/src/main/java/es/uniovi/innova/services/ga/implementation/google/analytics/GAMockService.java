@@ -21,4 +21,13 @@ public class GAMockService implements IGAService {
 		return (int) Math.random()*10000000;
 	}
 
+	@Override
+	public void setUA(String uA) {
+	}
+
+	@Override
+	public String getUA() {
+		return "";
+	}
+
 }

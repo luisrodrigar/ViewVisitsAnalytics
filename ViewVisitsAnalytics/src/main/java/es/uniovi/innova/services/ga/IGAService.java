@@ -6,4 +6,8 @@ public interface IGAService {
 	int numOfVisitsByMonth(int month, int year);
 
 	int numOfVisitsByYear(int year);
+	
+	void setUA(String uA);
+	
+	String getUA();
 }
