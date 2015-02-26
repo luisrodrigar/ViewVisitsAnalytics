@@ -2,23 +2,21 @@ package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 
 import main.java.es.uniovi.innova.services.ga.IGAService;
 
-
-
 public class GAMockService implements IGAService {
 
 	@Override
 	public int numOfVisitsByDay(int day, int month, int year) {
-		return (int) Math.random()*250;
+		return (int) Math.random() * 250;
 	}
 
 	@Override
 	public int numOfVisitsByMonth(int month, int year) {
-		return (int) Math.random()*10000;
+		return (int) Math.random() * 10000;
 	}
 
 	@Override
 	public int numOfVisitsByYear(int year) {
-		return (int) Math.random()*10000000;
+		return (int) Math.random() * 10000000;
 	}
 
 	@Override
@@ -28,6 +26,12 @@ public class GAMockService implements IGAService {
 	@Override
 	public String getUA() {
 		return "";
+	}
+
+	@Override
+	public int numOfVisitsBetweenTwoDates(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after) {
+		return (int) Math.random() * 10000000;
 	}
 
 }
