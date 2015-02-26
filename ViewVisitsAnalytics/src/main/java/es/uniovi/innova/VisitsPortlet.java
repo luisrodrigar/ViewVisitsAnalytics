@@ -7,7 +7,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
-import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -31,8 +30,6 @@ public class VisitsPortlet extends GenericPortlet {
 				gaService.numOfVisitsByMonth(12, 2014));
 		request.setAttribute("numVisitasYear",
 				gaService.numOfVisitsByYear(2015));
-//		System.out.println("Numero de visitas: "
-//				+ gaService.numOfVisitsByDay(6, 1, 2014));
 
 		include("/html/view.jsp", request, response);
 	}

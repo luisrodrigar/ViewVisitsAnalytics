@@ -330,10 +330,6 @@ public class GAnalyticsService implements IGAService {
 		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
 				+ getStringNumber(day_after);
 
-		System.out.println("wwwwwwwwwwweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-		System.out.println(startDate);
-		System.out.println(endDate);
-
 		return calculateVisits(startDate, endDate);
 
 	}
