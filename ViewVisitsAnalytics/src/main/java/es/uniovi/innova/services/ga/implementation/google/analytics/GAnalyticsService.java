@@ -6,8 +6,11 @@ import java.io.Reader;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
 import main.java.es.uniovi.innova.services.ga.IGAService;
+
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -97,6 +100,19 @@ public class GAnalyticsService implements IGAService {
 		String startDate = year + "-01-01";
 		String endDate = year + "-12-31";
 		return calculateVisits(startDate, endDate);
+	}
+	
+
+	@Override
+	public int numOfVisitsByInterval(Date start, Date end) {
+		String startDate = getStringDate(start);
+		String endDate = getStringDate(end);
+		return calculateVisits(startDate,endDate);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private String getStringDate(Date date){
+		return date.getYear()+1900 + "-" + getStringNumber(date.getMonth()+1) + "-" + getStringNumber(date.getDate());
 	}
 	
 	/**
@@ -278,5 +294,6 @@ public class GAnalyticsService implements IGAService {
 	public void setUA(String uA) {
 		UA = uA;
 	}
+
 
 }

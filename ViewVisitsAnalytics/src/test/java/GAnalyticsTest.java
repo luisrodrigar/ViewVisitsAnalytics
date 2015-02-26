@@ -1,6 +1,7 @@
 package test.java;
 
 import java.io.IOException;
+import java.util.Date;
 
 import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
 
@@ -12,9 +13,10 @@ public class GAnalyticsTest {
 	public void testAuthorization() throws IOException {
 		GAnalyticsService service = new GAnalyticsService();
 		service.setUA("UA-57349981-1");
-		service.numOfVisitsByDay(6,2,2015);
-		service.numOfVisitsByMonth(12, 2014);
-		service.numOfVisitsByYear(2014);
+		//service.numOfVisitsByDay(6,2,2015);
+		//service.numOfVisitsByMonth(12, 2014);
+		//service.numOfVisitsByYear(2014);
+		int numOfVisitsByInterval = service.numOfVisitsByInterval(new Date(114, 11, 25), new Date(115,1,22));
 	}
 
 }

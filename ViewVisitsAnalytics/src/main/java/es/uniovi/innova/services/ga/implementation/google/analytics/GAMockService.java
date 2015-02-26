@@ -1,5 +1,7 @@
 package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 
+import java.util.Date;
+
 import main.java.es.uniovi.innova.services.ga.IGAService;
 
 
@@ -28,6 +30,11 @@ public class GAMockService implements IGAService {
 	@Override
 	public String getUA() {
 		return "";
+	}
+
+	@Override
+	public int numOfVisitsByInterval(Date start, Date end) {
+		return (int) Math.random()*10000000;
 	}
 
 }
