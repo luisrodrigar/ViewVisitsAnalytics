@@ -22,7 +22,9 @@ public class VisitsPortlet extends GenericPortlet {
 		IGAService gaService = new GAnalyticsService();
 		gaService.setUA("UA-57349981-1");
 		request.setAttribute("mapPortal", portalService.getPortales());
-		request.setAttribute("numVisitas", gaService.numOfVisitsByDay(6, 1, 2014));
+		request.setAttribute("numVisitasDay", gaService.numOfVisitsByDay(6, 1, 2014));
+		request.setAttribute("numVisitasMonth", gaService.numOfVisitsByMonth(12, 2014));
+		request.setAttribute("numVisitasYear", gaService.numOfVisitsByYear(2015));
 		System.out.println("Numero de visitas: " + gaService.numOfVisitsByDay(6, 1, 2014) );
 		include("/html/view.jsp", request, response);
 	}
