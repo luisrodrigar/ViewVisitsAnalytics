@@ -43,16 +43,7 @@ public class GAnalyticsService implements IGAService {
 
 	private static FileDataStoreFactory dataStoreFactory;
 
-	private static final GoogleClientSecrets clientSecrets;
-
-	static {
-		try {
-			Reader reader = new FileReader("html/client_secrets.json");
-			clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
-		} catch (IOException e) {
-			throw new Error("No client_secres.json found\n", e);
-		}
-	}
+	private static GoogleClientSecrets clientSecrets;
 
 	private static final Collection<String> SCOPE = Collections
 			.singleton(AnalyticsScopes.ANALYTICS_READONLY);
@@ -60,6 +51,16 @@ public class GAnalyticsService implements IGAService {
 	
 	// UA - the identificador was created by Google Analytics
 	private String UA;
+	
+	public GAnalyticsService() {
+		try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			Reader reader = new FileReader(classLoader.getResource("client_secrets.json").getFile());
+			clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
+		} catch (IOException e) {
+			throw new Error("No client_secres.json found\n", e);
+		}
+	}
 	
 	/**
 	 * Number of visits in one specific day
