@@ -2,6 +2,10 @@
 <%@ page import="java.util.*"%>
 
 <portlet:defineObjects />
+<script type="text/javascript"
+    src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript"
+    src="js/analyticsCharts.js"></script>
 
 <%
 	Map<String, String> map = (Map<String, String>) renderRequest
@@ -20,7 +24,7 @@
 				}
 			%>
 		</select> <label for="inicio">Fecha inicio</label> <input id="inicio"
-			type="date" name="fecha_inicio"> <label for="fin">Fecha
+			type="date" name="fecha_inicio" > <label for="fin">Fecha
 			fin</label> <input id="fin" type="date" name="fecha_fin"> <input
 			type="submit" value="Consultar visitas" />
 	</form>
@@ -62,6 +66,7 @@
 		}
 	%>
 	</table>
+	<div id="chart_div"></div>
 </div>
 <%
 	}
