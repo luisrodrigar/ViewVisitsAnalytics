@@ -58,6 +58,7 @@ public class VisitsPortlet extends GenericPortlet {
 		request.setAttribute("fInicio",fInicio);
 		request.setAttribute("fFin",fFin);
 		request.setAttribute("visits",gaService.numOfVisitsByInterval(fInicio, fFin));
+		request.setAttribute("visitsPage",gaService.getVisitsByPage(fInicio, fFin));
 	}
 	
 	protected void include(String path, RenderRequest renderRequest,

@@ -3,11 +3,14 @@ package main.java.es.uniovi.innova.services.ga.implementation;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+//import org.springframework.cache.annotation.Cacheable;
+import java.util.Map;
+import java.util.TreeMap;
 
 import main.java.es.uniovi.innova.services.ga.IGAService;
 
@@ -68,61 +71,37 @@ public class GAnalyticsService implements IGAService {
 	}
 
 	/**
-	 * Number of visits in one specific day
-	 * 
-	 * @param day
-	 *            - the day of a month
-	 * @param month
-	 *            - the month of a year
-	 * @param year
-	 *            - the concrete year
+	 * Return the visits from a website provided by Google Analytics.
+	 * If the start date is after end date, the method swap the dates.
+	 * @param start - this date must be before end date, unless the dates swap
+	 * @param end - this date must be after start date, unless the dates swap
+	 * @return the visits in this interval
 	 */
 	@Override
-	public int numOfVisitsByDay(int day, int month, int year) {
-		String startDate = year + "-" + getStringNumber(month) + "-"
-				+ getStringNumber(day);
-		String endDate = startDate;
-		return calculateVisits(startDate, endDate);
-	}
-
-	/**
-	 * Number of visits during a specific month
-	 * 
-	 * @param month
-	 *            - the mont of a year
-	 * @param year
-	 *            - the concrete year
-	 */
-	@Override
-	public int numOfVisitsByMonth(int month, int year) {
-		String startDate = year + "-" + getStringNumber(month) + "-01";
-		String endDate = year
-				+ "-"
-				+ getStringNumber(month)
-				+ "-"
-				+ getStringNumber(Calendar.getInstance().getActualMaximum(
-						Calendar.DAY_OF_MONTH));
-		return calculateVisits(startDate, endDate);
-	}
-
-	/**
-	 * Number of visits during a specific year
-	 * 
-	 * @param year
-	 *            - the year to obtain the total visits
-	 */
-	@Override
-	public int numOfVisitsByYear(int year) {
-		String startDate = year + "-01-01";
-		String endDate = year + "-12-31";
-		return calculateVisits(startDate, endDate);
-	}
-
-	@Override
+	//@Cacheable(value="visitsCache", key="#UA.toString().append(#start.toString()).append(#end.toString())")
 	public int numOfVisitsByInterval(Date start, Date end) {
-		String startDate = getStringDate(start);
-		String endDate = getStringDate(end);
+		String startDate, endDate;
+		if(start.compareTo(end)<=0){
+			startDate = getStringDate(start);
+			endDate = getStringDate(end);
+		}else{
+			endDate =getStringDate(start);
+			startDate = getStringDate(end);
+		}	
 		return calculateVisits(startDate, endDate);
+	}
+	
+	@Override
+	public Map<String, String> getVisitsByPage(Date start, Date end) {
+		String startDate, endDate;
+		if(start.compareTo(end)<=0){
+			startDate = getStringDate(start);
+			endDate = getStringDate(end);
+		}else{
+			endDate =getStringDate(start);
+			startDate = getStringDate(end);
+		}	
+		return calculateVisitsByPage(startDate, endDate);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -149,9 +128,11 @@ public class GAnalyticsService implements IGAService {
 			if (profileId == null) {
 				System.err.println("No profiles found.");
 			} else {
-				GaData gaData = executeDataQuery(analytics, profileId,
+				GaData gaData = executeDataQueryGetVisits(analytics, profileId,
 						startDate, endDate);
+				GaData gd = executeDataQueryGetPagesVisits(analytics, profileId, startDate, endDate);
 				printGaData(gaData);
+				printGaData(gd);
 				try{
 					visits = Integer.valueOf(gaData.getRows().get(0).get(0));
 				}catch(NullPointerException ne){
@@ -166,6 +147,41 @@ public class GAnalyticsService implements IGAService {
 			t.printStackTrace();
 		}
 		return visits;
+	}
+	
+	private Map<String, String> calculateVisitsByPage(String startDate, String endDate){
+		Map<String, String> mapPageVisits = new TreeMap<String, String>();
+		try {
+			TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+			Analytics analytics = initializeAnalytics();
+			String profileId = getProfileIdByUA(analytics, UA);
+			if (profileId == null) {
+				System.err.println("No profiles found.");
+			} else {
+				GaData gaData = executeDataQueryGetPagesVisits(analytics, profileId, startDate, endDate);
+				printGaData(gaData);
+				try{
+					for(List<String> row : gaData.getRows()){
+						List<String> data = new ArrayList<String>();
+						for(String colum : row){
+							data.add(colum);
+						}
+						mapPageVisits.put(data.get(0), data.get(1));
+					}
+							
+				}catch(NullPointerException ne){
+					System.out.println("No visits to pages");;
+				}
+			}
+		} catch (GoogleJsonResponseException e) {
+			System.err.println("There was a service error: "
+					+ e.getDetails().getCode() + " : "
+					+ e.getDetails().getMessage());
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return mapPageVisits;
 	}
 
 	/**
@@ -272,11 +288,9 @@ public class GAnalyticsService implements IGAService {
 	 * @return the info about the visits of the profile
 	 * @throws IOException
 	 */
-	private static GaData executeDataQuery(Analytics analytics,
+	private static GaData executeDataQueryGetVisits(Analytics analytics,
 			String profileId, String startDate, String endDate)
 			throws IOException {
-		System.out.println(startDate);
-		System.out.println(endDate);
 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
 															// profile id.
 				startDate, // Start date.
@@ -284,6 +298,21 @@ public class GAnalyticsService implements IGAService {
 				"ga:visits") // Metrics.
 				.execute();
 	}
+	
+	private static GaData executeDataQueryGetPagesVisits(Analytics analytics,
+			String profileId, String startDate, String endDate)
+			throws IOException {
+		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
+															// profile id.
+				startDate, // Start date.
+				endDate, // End date.
+				"ga:visits") // Metrics.
+				.setDimensions("ga:pagePath")
+				.setSort("ga:visits")
+				.execute();
+	}
+	
+	
 
 	/**
 	 * Show the data about the name profile and the visits associated
@@ -341,5 +370,7 @@ public class GAnalyticsService implements IGAService {
 	public void setUA(String uA) {
 		UA = uA;
 	}
+
+
 
 }

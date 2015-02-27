@@ -6,6 +6,8 @@
 <%
 	Map<String, String> map = (Map<String, String>) renderRequest
 			.getAttribute("mapPortal");
+	Map<String, String> mapVisitsPage = (Map<String, String>) renderRequest
+			.getAttribute("visitsPage");
 %>
 <div id="prueba">
 	<form action="<portlet:actionURL></portlet:actionURL>" method="post">
@@ -39,5 +41,28 @@
 		<%=renderRequest.getAttribute("visits")%>
 		visitas
 	</p>
+	<h4>Páginas más vistas</h4>
+	<table>
+	<tr>
+		<th>Página</th>
+		<th>Visitas</th>
+	</tr>
+	<%
+		for (String pagina : mapVisitsPage.keySet()) {
+	%>
+	<tr>
+	<td>
+		<%= pagina %>
+	</td>
+	<td>
+		<%=mapVisitsPage.get(pagina) %>
+	</td>
+	</tr>
+	<%
+		}
+	%>
+	</table>
 </div>
-<%} %>
+<%
+	}
+%>
