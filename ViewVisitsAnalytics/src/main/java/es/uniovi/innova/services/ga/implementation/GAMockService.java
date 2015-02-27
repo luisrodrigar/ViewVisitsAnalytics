@@ -1,4 +1,4 @@
-package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
+package main.java.es.uniovi.innova.services.ga.implementation;
 
 import java.util.Date;
 

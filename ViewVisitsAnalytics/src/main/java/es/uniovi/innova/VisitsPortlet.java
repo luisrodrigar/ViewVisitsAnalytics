@@ -11,24 +11,31 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import main.java.es.uniovi.innova.services.ga.IGAService;
-import main.java.es.uniovi.innova.services.ga.IPortalesService;
-import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
-import main.java.es.uniovi.innova.services.ga.implementation.portales.APILiferayPortalesDAO;
+import main.java.es.uniovi.innova.services.portal.IPortalesService;
+import main.java.es.uniovi.innova.factory.Factory;
 
 public class VisitsPortlet extends GenericPortlet {
 	
-	IGAService gaService;
+	private IGAService gaService;
+	private IPortalesService portalService;
+	private BeanFactory factory;
+	private Factory factoryService;
+	
+	@Override
+	public void init(){
+		factory = new ClassPathXmlApplicationContext("beans.xml");
+	    factoryService = (Factory) factory.getBean("factory");
+	    gaService = factoryService.getServiceGoggleAnalytics();
+		portalService = factoryService.getServicePortales();
+	}
 	
 	@Override
 	public void doView(RenderRequest request, RenderResponse response)
 			throws PortletException, IOException {
-		IPortalesService portalService = new APILiferayPortalesDAO();
-		gaService = new GAnalyticsService();
-		gaService.setUA("UA-57349981-1");
 		request.setAttribute("mapPortal", portalService.getPortales());
-		request.setAttribute("numVisitas", gaService.numOfVisitsByDay(4, 2, 2015));
-		System.out.println("Numero de visitas: " + gaService.numOfVisitsByDay(4, 2, 2015) );
 		include("/html/view.jsp", request, response);
 	}
 	

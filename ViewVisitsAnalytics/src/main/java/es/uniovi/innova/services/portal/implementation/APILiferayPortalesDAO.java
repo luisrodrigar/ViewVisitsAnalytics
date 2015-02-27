@@ -1,14 +1,14 @@
-package main.java.es.uniovi.innova.services.ga.implementation.portales;
+package main.java.es.uniovi.innova.services.portal.implementation;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.java.es.uniovi.innova.services.portal.IPortalesService;
+
 import com.liferay.portal.SystemException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-
-import main.java.es.uniovi.innova.services.ga.IPortalesService;
 
 public class APILiferayPortalesDAO implements IPortalesService {
 

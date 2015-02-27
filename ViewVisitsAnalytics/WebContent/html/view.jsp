@@ -19,7 +19,7 @@
 			%>
 		</select> <label for="inicio">Fecha inicio</label> <input id="inicio"
 			type="date" name="fecha_inicio"> <label for="fin">Fecha
-			inicio</label> <input id="fin" type="date" name="fecha_fin"> <input
+			fin</label> <input id="fin" type="date" name="fecha_fin"> <input
 			type="submit" value="Consultar visitas" />
 	</form>
 </div>
@@ -27,6 +27,7 @@
 	if (renderRequest.getAttribute("id") != null) {
 %>
 <div id="info">
+	<hr>
 	<p>
 		Visitas para el portal
 		<%=renderRequest.getAttribute("id")%>
