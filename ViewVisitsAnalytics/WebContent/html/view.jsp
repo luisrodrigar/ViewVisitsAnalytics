@@ -5,23 +5,27 @@
 <portlet:defineObjects />
 <%
 	Map<String, String> map = (Map<String, String>) renderRequest
-			.getAttribute("mapPortal");
+	.getAttribute("mapPortal");
 %>
 <%
 	Map<String, String> mapCountry = (Map<String, String>) renderRequest
-			.getAttribute("mapCountry");
+	.getAttribute("mapCountry");
+%>
+<%
+	Map<String, String> mapSO = (Map<String, String>) renderRequest
+	.getAttribute("mapSO");
 %>
 <%
 	String numVisitasDay = renderRequest.getAttribute("numVisitasDay")
-			.toString();
+	.toString();
 %>
 <%
 	String numVisitasMonth = renderRequest.getAttribute(
-			"numVisitasMonth").toString();
+	"numVisitasMonth").toString();
 %>
 <%
 	String numVisitasYear = renderRequest
-			.getAttribute("numVisitasYear").toString();
+	.getAttribute("numVisitasYear").toString();
 %>
 
 
@@ -52,10 +56,11 @@
 	</fieldset>
 	<form action="<portlet:actionURL></portlet:actionURL>" method="post">
 		<fieldset class="date">
-		<legend>Numero de visitas por intervalo</legend>
-			<legend><u>Start Date</u></legend>
-			<br>
-			<label for="day_start">Day</label> <select id="day_start"
+			<legend>Numero de visitas por intervalo</legend>
+			<legend>
+				<u>Start Date</u>
+			</legend>
+			<br> <label for="day_start">Day</label> <select id="day_start"
 				name="day_start" />
 			<option>01</option>
 			<option>02</option>
@@ -107,11 +112,13 @@
 			<option>2013</option>
 			<option>2014</option>
 			<option>2015</option>
-			</select>
-			<br><br>
-			<legend><u>End Date</u></legend>
+			</select> <br>
 			<br>
-			<label for="day_end">Day</label> <select id="day_end" name="day_end" />
+			<legend>
+				<u>End Date</u>
+			</legend>
+			<br> <label for="day_end">Day</label> <select id="day_end"
+				name="day_end" />
 			<option>01</option>
 			<option>02</option>
 			<option>03</option>
@@ -163,25 +170,30 @@
 			<option>2014</option>
 			<option>2015</option>
 
-			</select>
-			<br>
-			<br><input type="submit" value="Mostrar" /></r>
+			</select> <br> <br>
+			<input type="submit" value="Mostrar" />
+			</r>
 		</fieldset>
 
-		
+
 		<%
 			if (renderRequest.getAttribute("numVisitasIntervalo") != null) {
-				System.out.println(renderRequest.getAttribute("numVisitasIntervalo"));	
+				System.out.println(renderRequest.getAttribute("numVisitasIntervalo"));
 		%>
-		<option value="<%=renderRequest.getAttribute("numVisitasIntervalo")%>">Numero de visitas: <%=renderRequest.getAttribute("numVisitasIntervalo")%> visitas.</option>
-		<% }%>
+		<option value="<%=renderRequest.getAttribute("numVisitasIntervalo")%>">Numero
+			de visitas:
+			<%=renderRequest.getAttribute("numVisitasIntervalo")%> visitas.
+		</option>
+		<%
+			}
+		%>
 
-		
+
 
 	</form>
-	
+
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
+	<script type="text/javascript">
 
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
@@ -190,16 +202,26 @@
       google.setOnLoadCallback(drawChart);
       
 var dataPieCountry = [
-    				<% if(mapCountry!=null){ for(int i = 0; i<mapCountry.keySet().size(); i++){ 
+    				<%if(mapCountry!=null){ for(int i = 0; i<mapCountry.keySet().size(); i++){ 
     				if(i<mapCountry.keySet().size()-1){%>			
-    					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i]) %>],
+    					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i])%>],
      				<%}else {%>
-     					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i]) %>]
+     					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i])%>]
      				<%}
      				}
     				}%>
      			];
-      
+ var dataPieSSOO = [
+      				<%if(mapSO!=null){ for(int i = 0; i<mapSO.keySet().size(); i++){ 
+      				if(i<mapSO.keySet().size()-1){%>			
+      					['<%=mapSO.keySet().toArray()[i]%>',<%=mapSO.get(mapSO.keySet().toArray()[i])%>],
+       				<%}else {%>
+       					['<%=mapSO.keySet().toArray()[i]%>',<%=mapSO.get(mapSO.keySet().toArray()[i])%>]
+       				<%}
+       				}
+      				}%>
+       			]; 
+        
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
@@ -211,27 +233,49 @@ var dataPieCountry = [
         dataCountry.addColumn('string', 'Country');
         dataCountry.addColumn('number', 'Slices');
        dataCountry.addRows(dataPieCountry);
-        
+      
+       var dataSO = new google.visualization.DataTable();
+       dataSO.addColumn('string', 'SSOO');
+       dataSO.addColumn('number', 'Slices');
+      dataSO.addRows(dataPieSSOO);
+         
 
         // Set chart options
         var optionsCountry = {'title':'Número de visitas hechas por pais',
-                       'width':600,
-                       'height':500};
+                       'width':400,
+                       'height':300};
+        
+         var optionsSO = {'title':'Versiones de sistema operativo',
+                'width':400,
+                'height':300}; 
         
 
         // Instantiate and draw our chart, passing in some options.
         var chartCountry = new google.visualization.PieChart(document.getElementById('chart_div_country'));
         chartCountry.draw(dataCountry, optionsCountry);
+         var chartSO = new google.visualization.PieChart(document.getElementById('chart_div_ssoo'));
+        chartSO.draw(dataSO, optionsSO); 
       }
     </script>
-	 <body>
-    <!--Div that will hold the pie chart-->
-    
-    <% if(mapCountry!=null){ %>
-    <div id="chart_div_country"></div>
-    <% } %>
-  </body>
-	
+	<body>
+		<!--Div that will hold the pie chart-->
+
+		<%
+			if (mapCountry != null) {
+		%>
+		<div id="chart_div_country"></div>
+		<%
+			}
+		%>
+		<%
+			if (mapSO != null) {
+		%>
+		<div id="chart_div_ssoo"></div>
+		<%
+			}
+		%>
+	</body>
+
 
 
 </div>

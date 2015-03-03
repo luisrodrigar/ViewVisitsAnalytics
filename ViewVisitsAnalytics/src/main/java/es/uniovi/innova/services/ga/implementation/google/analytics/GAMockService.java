@@ -42,7 +42,12 @@ public class GAMockService implements IGAService {
 			int year_after) {
 		return null;
 	}
-
+	@Override
+	public Map<String, String> getVisitsBySSOO(int day_before,
+			int month_before, int year_before, int day_after, int month_after,
+			int year_after) {
+		return null;
+	}
 	
 
 }

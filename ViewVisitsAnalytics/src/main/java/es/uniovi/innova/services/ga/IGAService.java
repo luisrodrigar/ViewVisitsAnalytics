@@ -16,6 +16,9 @@ public interface IGAService {
 	
 	Map<String, String> getVisitsByCountry(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after);
+	
+	Map<String, String> getVisitsBySSOO(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after);
 
 	String getUA();
 }
