@@ -22,7 +22,7 @@ public class GAnalyticsTest {
 		//service.numOfVisitsByDay(6,2,2015);
 		//service.numOfVisitsByMonth(12, 2014);
 		//service.numOfVisitsByYear(2014);
-		service.numOfVisitsByInterval(new Date(114, 11, 25), new Date(115,1,22));
+		service.getVisitsByInterval(new Date(114, 11, 25), new Date(115,1,22));
 	}
 
 }

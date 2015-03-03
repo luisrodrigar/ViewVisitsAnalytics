@@ -5,11 +5,15 @@ import java.util.Map;
 
 public interface IGAService {
 	
-	int numOfVisitsByInterval(Date start, Date end);
+	int getVisitsByInterval(Date start, Date end);
 	
 	Map<String, String> getVisitsByPage(Date start, Date end);
 	
 	void setUA(String uA);
 	
 	String getUA();
+
+	Map<String, String> getVisitsByOS(Date start, Date end);
+
+	Map<String, String> getVisitsByBrowser(Date start, Date end);
 }

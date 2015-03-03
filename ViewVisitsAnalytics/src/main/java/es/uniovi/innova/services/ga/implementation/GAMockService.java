@@ -24,8 +24,20 @@ public class GAMockService implements IGAService {
 	}
 
 	@Override
-	public int numOfVisitsByInterval(Date start, Date end) {
+	public int getVisitsByInterval(Date start, Date end) {
 		return (int) Math.random()*10000000;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, String> getVisitsByOS(Date start, Date end) {
+		return Collections.EMPTY_MAP;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, String> getVisitsByBrowser(Date start, Date end) {
+		return Collections.EMPTY_MAP;
 	}
 
 }

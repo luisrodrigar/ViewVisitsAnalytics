@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
@@ -11,8 +12,10 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.portal.IPortalesService;
 import main.java.es.uniovi.innova.factory.Factory;
@@ -39,6 +42,7 @@ public class VisitsPortlet extends GenericPortlet {
 		include("/html/view.jsp", request, response);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void processAction(ActionRequest request, ActionResponse response)
 			throws PortletException, IOException {
@@ -55,10 +59,12 @@ public class VisitsPortlet extends GenericPortlet {
 		}
 		gaService.setUA(portalID);
 		request.setAttribute("id", portalID);
-		request.setAttribute("fInicio",fInicio);
-		request.setAttribute("fFin",fFin);
-		request.setAttribute("visits",gaService.numOfVisitsByInterval(fInicio, fFin));
+		request.setAttribute("fInicio",fInicio.getDate()+"/"+((Integer)fInicio.getMonth()+1)+"/"+((Integer)fInicio.getYear()+1900));
+		request.setAttribute("fFin",fFin.getDate()+"/"+((Integer)fFin.getMonth()+1)+"/"+((Integer)fFin.getYear()+1900));
+		request.setAttribute("visits",gaService.getVisitsByInterval(fInicio, fFin));
 		request.setAttribute("visitsPage",gaService.getVisitsByPage(fInicio, fFin));
+		request.setAttribute("visitsOS", gaService.getVisitsByOS(fInicio, fFin));
+		request.setAttribute("visitsBrowser", gaService.getVisitsByBrowser(fInicio, fFin));
 	}
 	
 	protected void include(String path, RenderRequest renderRequest,
