@@ -48,7 +48,9 @@
 	</fieldset>
 	<form action="<portlet:actionURL></portlet:actionURL>" method="post">
 		<fieldset class="date">
-			<legend>Start Date </legend>
+		<legend>Numero de visitas por intervalo</legend>
+			<legend><u>Start Date</u></legend>
+			<br>
 			<label for="day_start">Day</label> <select id="day_start"
 				name="day_start" />
 			<option>01</option>
@@ -102,8 +104,9 @@
 			<option>2014</option>
 			<option>2015</option>
 			</select>
-
-			<legend>End Date </legend>
+			<br><br>
+			<legend><u>End Date</u></legend>
+			<br>
 			<label for="day_end">Day</label> <select id="day_end" name="day_end" />
 			<option>01</option>
 			<option>02</option>
@@ -157,17 +160,23 @@
 			<option>2015</option>
 
 			</select>
+			<br>
+			<br><input type="submit" value="Mostrar" /></r>
 		</fieldset>
 
-		<input type="submit" value="Mostrar" />
+		
 		<%
 			if (renderRequest.getAttribute("numVisitasIntervalo") != null) {
 				System.out.println(renderRequest.getAttribute("numVisitasIntervalo"));	
 		%>
 		<option value="<%=renderRequest.getAttribute("numVisitasIntervalo")%>">Numero de visitas: <%=renderRequest.getAttribute("numVisitasIntervalo")%> visitas.</option>
-		
 		<% }%>
-				
+		<%
+			if (renderRequest.getAttribute("operativo") != null) {
+				System.out.println(renderRequest.getAttribute("operativo"));	
+		%>
+		<option value="<%=renderRequest.getAttribute("operativo")%>">Sistema operativo: <%=renderRequest.getAttribute("operativo")%></option>
+		<% }%>
 		
 
 	</form>

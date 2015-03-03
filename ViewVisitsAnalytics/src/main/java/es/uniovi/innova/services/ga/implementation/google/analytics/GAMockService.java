@@ -34,4 +34,10 @@ public class GAMockService implements IGAService {
 		return (int) Math.random() * 10000000;
 	}
 
+	@Override
+	public String getOperativeSystem(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after) {
+		return "";
+	}
+
 }

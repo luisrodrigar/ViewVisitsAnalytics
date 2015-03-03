@@ -117,6 +117,32 @@ public class GAnalyticsService implements IGAService {
 		return calculateVisits(startDate, endDate);
 	}
 
+	@Override
+	public int numOfVisitsBetweenTwoDates(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after) {
+
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
+
+		return calculateVisits(startDate, endDate);
+
+	}
+
+	@Override
+	public String getOperativeSystem(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after) {
+
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
+
+		return calculateSSOO(startDate, endDate);
+
+	}
+
 	/**
 	 * Obtain the visits of a website between start and end date
 	 * 
@@ -134,7 +160,7 @@ public class GAnalyticsService implements IGAService {
 			if (profileId == null) {
 				System.err.println("No profiles found.");
 			} else {
-				GaData gaData = executeDataQuery(analytics, profileId,
+				GaData gaData = executeVisitsQuery(analytics, profileId,
 						startDate, endDate);
 				printGaData(gaData);
 				visits = Integer.valueOf(gaData.getRows().get(0).get(0));
@@ -147,6 +173,32 @@ public class GAnalyticsService implements IGAService {
 			t.printStackTrace();
 		}
 		return visits;
+	}
+
+	private String calculateSSOO(String startDate, String endDate) {
+		String result = null;
+		try {
+			TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+			Analytics analytics = initializeAnalytics();
+			String profileId = getProfileIdByUA(analytics, UA);
+			if (profileId == null) {
+				System.err.println("No profiles found.");
+			} else {
+				GaData gaData = executeSSOOQuery(analytics, profileId,
+						startDate, endDate);
+				printGaData(gaData);
+				result = gaData.getRows().get(0).get(0);
+				System.out.println("EL RESULTADO ES:" + result);
+			}
+		} catch (GoogleJsonResponseException e) {
+			System.err.println("There was a service error: "
+					+ e.getDetails().getCode() + " : "
+					+ e.getDetails().getMessage());
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return result;
 	}
 
 	/**
@@ -253,7 +305,7 @@ public class GAnalyticsService implements IGAService {
 	 * @return the info about the visits of the profile
 	 * @throws IOException
 	 */
-	private static GaData executeDataQuery(Analytics analytics,
+	private static GaData executeVisitsQuery(Analytics analytics,
 			String profileId, String startDate, String endDate)
 			throws IOException {
 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
@@ -261,6 +313,29 @@ public class GAnalyticsService implements IGAService {
 				startDate, // Start date.
 				endDate, // End date.
 				"ga:visits") // Metrics.
+				.execute();
+	}
+
+	/**
+	 * Query to execute for getting the info about the website
+	 * 
+	 * @param analytics
+	 *            - authorization and credentials
+	 * @param profileId
+	 *            - profile about the website to obtain the visits
+	 * @param startDate
+	 *            - initial date for starting to count the visits
+	 * @param endDate
+	 *            - end date for finishing to count the visits
+	 * @return the info about the visits of the profile
+	 * @throws IOException
+	 */
+	private static GaData executeSSOOQuery(Analytics analytics,
+			String profileId, String startDate, String endDate)
+			throws IOException {
+		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
+				// profile id.
+				startDate,endDate, "ga:deviceCategory") // Metrics.
 				.execute();
 	}
 
@@ -319,19 +394,6 @@ public class GAnalyticsService implements IGAService {
 	 */
 	public void setUA(String uA) {
 		UA = uA;
-	}
-
-	@Override
-	public int numOfVisitsBetweenTwoDates(int day_before, int month_before,
-			int year_before, int day_after, int month_after, int year_after) {
-
-		String startDate = year_before + "-" + getStringNumber(month_before)
-				+ "-" + getStringNumber(day_before);
-		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
-				+ getStringNumber(day_after);
-
-		return calculateVisits(startDate, endDate);
-
 	}
 
 }

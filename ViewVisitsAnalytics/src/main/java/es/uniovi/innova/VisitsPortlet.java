@@ -53,8 +53,11 @@ public class VisitsPortlet extends GenericPortlet {
 		int valor =  gaService
 				.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
 						dayEnd, monthEnd, yearEnd);
+		String ssoo =  gaService.getOperativeSystem(dayStart, monthStart, yearStart,
+						dayEnd, monthEnd, yearEnd);
 		
 		actionrequest.setAttribute("numVisitasIntervalo",valor);
+		actionrequest.setAttribute("operativo",ssoo);
 	}
 
 
