@@ -54,11 +54,11 @@ public class VisitsPortlet extends GenericPortlet {
 		int valor =  gaService
 				.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
 						dayEnd, monthEnd, yearEnd);
-		Map<String,String> ssoo =  gaService.getOperativeSystem(dayStart, monthStart, yearStart,
+		Map<String,String> countries =  gaService.getVisitsByCountry(dayStart, monthStart, yearStart,
 						dayEnd, monthEnd, yearEnd);
 		
 		actionrequest.setAttribute("numVisitasIntervalo",valor);
-		actionrequest.setAttribute("mapOS",ssoo);
+		actionrequest.setAttribute("mapCountry",countries);
 	}
 
 

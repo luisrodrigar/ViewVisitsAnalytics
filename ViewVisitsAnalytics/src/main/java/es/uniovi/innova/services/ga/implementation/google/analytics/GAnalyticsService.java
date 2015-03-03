@@ -134,7 +134,7 @@ public class GAnalyticsService implements IGAService {
 	}
 
 	@Override
-	public Map<String,String> getOperativeSystem(int day_before, int month_before,
+	public Map<String,String> getVisitsByCountry(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after) {
 
 		String startDate = year_before + "-" + getStringNumber(month_before)

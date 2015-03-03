@@ -14,7 +14,7 @@ public interface IGAService {
 
 	void setUA(String uA);
 	
-	Map<String, String> getOperativeSystem(int day_before, int month_before,
+	Map<String, String> getVisitsByCountry(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after);
 
 	String getUA();

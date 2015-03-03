@@ -8,8 +8,8 @@
 			.getAttribute("mapPortal");
 %>
 <%
-	Map<String, String> mapOS = (Map<String, String>) renderRequest
-			.getAttribute("mapOS");
+	Map<String, String> mapCountry = (Map<String, String>) renderRequest
+			.getAttribute("mapCountry");
 %>
 <%
 	String numVisitasDay = renderRequest.getAttribute("numVisitasDay")
@@ -175,23 +175,63 @@
 		%>
 		<option value="<%=renderRequest.getAttribute("numVisitasIntervalo")%>">Numero de visitas: <%=renderRequest.getAttribute("numVisitasIntervalo")%> visitas.</option>
 		<% }%>
-		<%
-			if (renderRequest.getAttribute("mapOS") != null) {
-				for (String portal : mapOS.keySet()) {
-			%>
-			<li><%=portal%> - <%=mapOS.get(portal)%></li>
-			<%
-				}
-			%>
-				weeee
-				
-				
-				
-		<% }%>
+
 		
 
 	</form>
+	
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
 
-	</fieldset>
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+      
+var dataPieCountry = [
+    				<% if(mapCountry!=null){ for(int i = 0; i<mapCountry.keySet().size(); i++){ 
+    				if(i<mapCountry.keySet().size()-1){%>			
+    					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i]) %>],
+     				<%}else {%>
+     					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i]) %>]
+     				<%}
+     				}
+    				}%>
+     			];
+      
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+       // Create the data table.
+        var dataCountry = new google.visualization.DataTable();
+        dataCountry.addColumn('string', 'Country');
+        dataCountry.addColumn('number', 'Slices');
+       dataCountry.addRows(dataPieCountry);
+        
+
+        // Set chart options
+        var optionsCountry = {'title':'Número de visitas hechas por pais',
+                       'width':600,
+                       'height':500};
+        
+
+        // Instantiate and draw our chart, passing in some options.
+        var chartCountry = new google.visualization.PieChart(document.getElementById('chart_div_country'));
+        chartCountry.draw(dataCountry, optionsCountry);
+      }
+    </script>
+	 <body>
+    <!--Div that will hold the pie chart-->
+    
+    <% if(mapCountry!=null){ %>
+    <div id="chart_div_country"></div>
+    <% } %>
+  </body>
+	
+
 
 </div>
