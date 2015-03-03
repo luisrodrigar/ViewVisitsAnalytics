@@ -3,10 +3,13 @@ package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import main.java.es.uniovi.innova.services.ga.IGAService;
 
@@ -131,7 +134,7 @@ public class GAnalyticsService implements IGAService {
 	}
 
 	@Override
-	public String getOperativeSystem(int day_before, int month_before,
+	public Map<String,String> getOperativeSystem(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after) {
 
 		String startDate = year_before + "-" + getStringNumber(month_before)
@@ -175,31 +178,42 @@ public class GAnalyticsService implements IGAService {
 		return visits;
 	}
 
-	private String calculateSSOO(String startDate, String endDate) {
-		String result = null;
-		try {
-			TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-			Analytics analytics = initializeAnalytics();
-			String profileId = getProfileIdByUA(analytics, UA);
-			if (profileId == null) {
-				System.err.println("No profiles found.");
-			} else {
-				GaData gaData = executeSSOOQuery(analytics, profileId,
-						startDate, endDate);
-				printGaData(gaData);
-				result = gaData.getRows().get(0).get(0);
-				System.out.println("EL RESULTADO ES:" + result);
+	private Map<String, String> calculateSSOO(String startDate, String endDate) {
+				Map<String, String> mapOS = new TreeMap<String, String>();
+				try {
+					TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+					dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+					Analytics analytics = initializeAnalytics();
+					String profileId = getProfileIdByUA(analytics, UA);
+					if (profileId == null) {
+						System.err.println("No profiles found.");
+				} else {
+						GaData gaData = executeCountryQuery(analytics, profileId,
+								startDate, endDate);
+						//printGaData(gaData);
+						try {
+							for (List<String> row : gaData.getRows()) {
+								List<String> data = new ArrayList<String>();
+							for (String colum : row) {
+									data.add(colum);
+								}
+								mapOS.put(data.get(0), data.get(1));
+							}
+		
+						} catch (NullPointerException ne) {
+							System.out.println("No visits to pages");
+							;
+						}
+					}
+				} catch (GoogleJsonResponseException e) {
+					System.err.println("There was a service error: "
+							+ e.getDetails().getCode() + " : "
+							+ e.getDetails().getMessage());
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+				return mapOS;
 			}
-		} catch (GoogleJsonResponseException e) {
-			System.err.println("There was a service error: "
-					+ e.getDetails().getCode() + " : "
-					+ e.getDetails().getMessage());
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		return result;
-	}
 
 	/**
 	 * If number less than 10, it will return: 0'number' If number more than 9,
@@ -330,13 +344,13 @@ public class GAnalyticsService implements IGAService {
 	 * @return the info about the visits of the profile
 	 * @throws IOException
 	 */
-	private static GaData executeSSOOQuery(Analytics analytics,
+	private static GaData executeCountryQuery(Analytics analytics,
 			String profileId, String startDate, String endDate)
 			throws IOException {
 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
 				// profile id.
-				startDate,endDate, "ga:deviceCategory") // Metrics.
-				.execute();
+				startDate,endDate, "ga:visits").setDimensions("ga:country").setSort("ga:visits").execute(); // Metrics.
+				
 	}
 
 	/**

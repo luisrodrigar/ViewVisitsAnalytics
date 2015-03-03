@@ -8,6 +8,10 @@
 			.getAttribute("mapPortal");
 %>
 <%
+	Map<String, String> mapOS = (Map<String, String>) renderRequest
+			.getAttribute("mapOS");
+%>
+<%
 	String numVisitasDay = renderRequest.getAttribute("numVisitasDay")
 			.toString();
 %>
@@ -172,10 +176,17 @@
 		<option value="<%=renderRequest.getAttribute("numVisitasIntervalo")%>">Numero de visitas: <%=renderRequest.getAttribute("numVisitasIntervalo")%> visitas.</option>
 		<% }%>
 		<%
-			if (renderRequest.getAttribute("operativo") != null) {
-				System.out.println(renderRequest.getAttribute("operativo"));	
-		%>
-		<option value="<%=renderRequest.getAttribute("operativo")%>">Sistema operativo: <%=renderRequest.getAttribute("operativo")%></option>
+			if (renderRequest.getAttribute("mapOS") != null) {
+				for (String portal : mapOS.keySet()) {
+			%>
+			<li><%=portal%> - <%=mapOS.get(portal)%></li>
+			<%
+				}
+			%>
+				weeee
+				
+				
+				
 		<% }%>
 		
 

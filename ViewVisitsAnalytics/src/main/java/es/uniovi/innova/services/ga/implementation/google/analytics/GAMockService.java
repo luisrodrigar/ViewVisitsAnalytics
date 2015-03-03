@@ -1,5 +1,7 @@
 package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 
+import java.util.Map;
+
 import main.java.es.uniovi.innova.services.ga.IGAService;
 
 public class GAMockService implements IGAService {
@@ -35,9 +37,12 @@ public class GAMockService implements IGAService {
 	}
 
 	@Override
-	public String getOperativeSystem(int day_before, int month_before,
-			int year_before, int day_after, int month_after, int year_after) {
-		return "";
+	public Map<String, String> getOperativeSystem(int day_before,
+			int month_before, int year_before, int day_after, int month_after,
+			int year_after) {
+		return null;
 	}
+
+	
 
 }

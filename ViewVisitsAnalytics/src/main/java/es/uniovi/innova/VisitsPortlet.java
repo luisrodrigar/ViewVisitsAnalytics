@@ -1,6 +1,7 @@
 package main.java.es.uniovi.innova;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -53,11 +54,11 @@ public class VisitsPortlet extends GenericPortlet {
 		int valor =  gaService
 				.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
 						dayEnd, monthEnd, yearEnd);
-		String ssoo =  gaService.getOperativeSystem(dayStart, monthStart, yearStart,
+		Map<String,String> ssoo =  gaService.getOperativeSystem(dayStart, monthStart, yearStart,
 						dayEnd, monthEnd, yearEnd);
 		
 		actionrequest.setAttribute("numVisitasIntervalo",valor);
-		actionrequest.setAttribute("operativo",ssoo);
+		actionrequest.setAttribute("mapOS",ssoo);
 	}
 
 

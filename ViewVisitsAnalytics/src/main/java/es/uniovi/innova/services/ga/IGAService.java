@@ -1,5 +1,7 @@
 package main.java.es.uniovi.innova.services.ga;
 
+import java.util.Map;
+
 public interface IGAService {
 	int numOfVisitsByDay(int day, int month, int year);
 
@@ -12,7 +14,7 @@ public interface IGAService {
 
 	void setUA(String uA);
 	
-	String getOperativeSystem(int day_before, int month_before,
+	Map<String, String> getOperativeSystem(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after);
 
 	String getUA();
