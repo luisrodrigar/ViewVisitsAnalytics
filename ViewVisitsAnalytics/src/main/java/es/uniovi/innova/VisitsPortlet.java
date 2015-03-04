@@ -60,9 +60,13 @@ public class VisitsPortlet extends GenericPortlet {
 		Map<String,String> ssoo =  gaService.getVisitsBySSOO(dayStart, monthStart, yearStart,
 				dayEnd, monthEnd, yearEnd);
 		
+		Map<String,String> pageVisits =  gaService.getPageVisits(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd);
+		
 		actionrequest.setAttribute("numVisitasIntervalo",valor);
 		actionrequest.setAttribute("mapCountry",countries);
 		actionrequest.setAttribute("mapSO",ssoo);
+		actionrequest.setAttribute("mapPages",pageVisits);
 	}
 
 

@@ -159,6 +159,19 @@ public class GAnalyticsService implements IGAService {
 
 	}
 
+	@Override
+	public Map<String,String> getPageVisits(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after) {
+
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
+
+		return calculateGetPageVisits(startDate, endDate);
+
+	}
+
 	/**
 	 * Obtain the visits of a website between start and end date
 	 * 
@@ -190,6 +203,7 @@ public class GAnalyticsService implements IGAService {
 		}
 		return visits;
 	}
+
 
 	private Map<String, String> calculateCountry(String startDate, String endDate) {
 				Map<String, String> mapOS = new TreeMap<String, String>();
@@ -227,6 +241,42 @@ public class GAnalyticsService implements IGAService {
 				}
 				return mapOS;
 			}
+	private Map<String, String> calculateGetPageVisits(String startDate, String endDate) {
+		Map<String, String> mapOS = new TreeMap<String, String>();
+		try {
+			TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+			Analytics analytics = initializeAnalytics();
+			String profileId = getProfileIdByUA(analytics, UA);
+			if (profileId == null) {
+				System.err.println("No profiles found.");
+		} else {
+				GaData gaData = executeGetPagesVisits(analytics, profileId,
+						startDate, endDate);
+				//printGaData(gaData);
+				try {
+					for (List<String> row : gaData.getRows()) {
+						List<String> data = new ArrayList<String>();
+					for (String colum : row) {
+							data.add(colum);
+						}
+						mapOS.put(data.get(0), data.get(1));
+					}
+
+				} catch (NullPointerException ne) {
+					System.out.println("No visits to pages");
+					;
+				}
+			}
+		} catch (GoogleJsonResponseException e) {
+			System.err.println("There was a service error: "
+					+ e.getDetails().getCode() + " : "
+					+ e.getDetails().getMessage());
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return mapOS;
+	}
 
 	private Map<String, String> calculateSSOO(String startDate, String endDate) {
 		Map<String, String> mapOS = new TreeMap<String, String>();
@@ -411,6 +461,19 @@ public class GAnalyticsService implements IGAService {
 				startDate,endDate, "ga:visits").setDimensions("ga:operatingSystemVersion").setSort("ga:visits").execute(); // Metrics.
 				
 	}
+	
+	private static GaData executeGetPagesVisits(Analytics analytics,
+ 			String profileId, String startDate, String endDate)
+ 			throws IOException {
+ 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
+ 															// profile id.
+ 				startDate, // Start date.
+ 				endDate, // End date.
+ 				"ga:visits") // Metrics.
+				.setDimensions("ga:pagePath")
+				.setSort("ga:visits")
+				.execute();
+ 	}
 
 	/**
 	 * Show the data about the name profile and the visits associated

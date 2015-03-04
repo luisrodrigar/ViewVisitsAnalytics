@@ -48,6 +48,13 @@ public class GAMockService implements IGAService {
 			int year_after) {
 		return null;
 	}
+
+	@Override
+	public Map<String, String> getPageVisits(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

@@ -21,4 +21,7 @@ public interface IGAService {
 			int year_before, int day_after, int month_after, int year_after);
 
 	String getUA();
+
+	Map<String, String> getPageVisits(int day_before, int month_before,
+			int year_before, int day_after, int month_after, int year_after);
 }
