@@ -143,9 +143,9 @@
  var dataPieCountry = [
     				<%if(mapCountry!=null){ for(int i = 0; i<mapCountry.keySet().size(); i++){ 
     				if(i<mapCountry.keySet().size()-1){%>			
-    					["<%=mapCountry.keySet().toArray()[i]%>",<%=mapCountry.get(mapCountry.keySet().toArray()[i])%>],
+    					['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i])%>],
      				<%}else {%>
-     				["<%=mapCountry.keySet().toArray()[i]%>",<%=mapCountry.get(mapCountry.keySet().toArray()[i])%>],
+     				['<%=mapCountry.keySet().toArray()[i]%>',<%=mapCountry.get(mapCountry.keySet().toArray()[i])%>],
      				<%}
      				}
     				}%>
@@ -178,10 +178,15 @@
   /*       dataCountry.addColumn('timeofday', 'Time of Day');
         dataCountry.addColumn('number', 'Motivation Level');
       */
-       var dataSO = new google.visualization.DataTable();
+ /*       var dataSO = new google.visualization.DataTable();
        dataSO.addColumn('string', 'SSOO');
        dataSO.addColumn('number', 'Visitas por ssoo de Android');
-      dataSO.addRows(dataPieSSOO); 
+      dataSO.addRows(dataPieSSOO);  */
+      
+      var dataCountry = new google.visualization.DataTable();
+      dataCountry.addColumn('string', 'Pais');
+      dataCountry.addColumn('number', 'Visitas por pais');
+     dataCountry.addRows(dataPieCountry); 
          
 
         // Set chart options
@@ -214,28 +219,33 @@
         	      };          
                        
                                 		      */             
-         var optionsSO = {'title':'Versiones de sistema operativo',
+         var optionsSO = {'title':'Versiones de Android',
                 'width':400,
-                'height':300};  
+                'height':300}; 
+                                		      
+            var optionsCountry = {'title':'Visitas por paises',
+                                'width':400,
+                                 'height':300};  
+                                		        
         
 
         // Instantiate and draw our chart, passing in some options.
       /*   var chartCountry = new google.visualization.ColumnChart(document.getElementById('chart_div_country'));
         chartCoutry.draw(dataCountry, optionsCountry);*/
-         var chartSO = new google.visualization.PieChart(document.getElementById('chart_div_ssoo'));
-        chartSO.draw(dataSO, optionsSO);  
+         var chartCountry = new google.visualization.PieChart(document.getElementById('chart_div_country'));
+        chartCountry.draw(dataCountry, optionsCountry);  
 
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Time of Day');
-          data.addColumn('number', 'Motivation Level');
+          var dataSO = new google.visualization.DataTable();
+          dataSO.addColumn('string', 'Version de android');
+          dataSO.addColumn('number', 'Visits');
 
-          data.addRows(dataPieCountry);
+          dataSO.addRows(dataPieSSOO);
 
           var options = {
             width: 400,
             height: 300,
             hAxis: {
-              title: 'Time of Day',
+              title: 'Version de android',
               gridlines: {count: 5}
             },
             vAxis: {
@@ -243,10 +253,10 @@
             }
           };
 
-          var chart = new google.visualization.ColumnChart(
-            document.getElementById('ex0'));
+          var chartSO = new google.visualization.ColumnChart(
+            document.getElementById('chart_div_ssoo'));
 
-          chart.draw(dataSO, optionsSO);
+          chartSO.draw(dataSO, optionsSO);
         
         
       }
@@ -255,16 +265,16 @@
 		<!--Div that will hold the pie chart-->
 
 		<%
-			if (mapCountry != null) {
+			if (mapSO != null) {
 		%>
-		<div id="ex0"></div>
+		<div id="chart_div_ssoo"></div>
 		<%
 			}
 		%>
 		<%
-			if (mapSO != null) {
+			if (mapCountry != null) {
 		%>
-		<div id="chart_div_ssoo"></div>
+		<div id="chart_div_country"></div>
 		<%
 			}
 		%>
