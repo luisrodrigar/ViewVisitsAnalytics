@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -58,6 +59,10 @@ public class VisitsPortlet extends GenericPortlet {
 			e.printStackTrace();
 		}
 		gaService.setUA(portalID);
+		Map<String, String> mapPortales = portalService.getPortales();
+		for(String portal : mapPortales.keySet())
+			if(mapPortales.get(portal).equals(portalID))
+				request.setAttribute("name", portal);
 		request.setAttribute("id", portalID);
 		request.setAttribute("fInicio",fInicio.getDate()+"/"+((Integer)fInicio.getMonth()+1)+"/"+((Integer)fInicio.getYear()+1900));
 		request.setAttribute("fFin",fFin.getDate()+"/"+((Integer)fFin.getMonth()+1)+"/"+((Integer)fFin.getYear()+1900));
