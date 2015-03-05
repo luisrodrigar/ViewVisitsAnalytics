@@ -3,10 +3,13 @@ package main.java.es.uniovi.innova.services.ga.implementation.google.analytics;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,6 +34,7 @@ import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 import com.google.api.services.analytics.model.Profiles;
 import com.google.api.services.analytics.model.Webproperties;
 import com.google.api.services.analytics.model.Webproperty;
+import org.apache.commons.logging.*;
 
 /**
  * Class for getting information provided for Google Analytics
@@ -129,13 +133,40 @@ public class GAnalyticsService implements IGAService {
 		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
 				+ getStringNumber(day_after);
 
+		
+		System.out.println("-------------------------Entre el intervalo de fechas " + isFechaActual(startDate, endDate) + "esta en la fecha actual");
 		return calculateVisits(startDate, endDate);
 
 	}
 
+	private boolean isFechaActual(String startDate, String endDate) {
+		Date fechaActual = new Date();
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaNow = formater.format(fechaActual);
+
+		try {
+			fechaActual = formater.parse(fechaNow);
+			Date fecha1 = formater.parse(startDate);
+			Date fecha2 = formater.parse(endDate);
+
+			if (fechaActual.before(fecha2) && fechaActual.after(fecha1)) {
+				return true;
+			}
+			return false;
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+
+		return false;
+
+	}
+
 	@Override
-	public Map<String,String> getVisitsByCountry(int day_before, int month_before,
-			int year_before, int day_after, int month_after, int year_after) {
+	public Map<String, String> getVisitsByCountry(int day_before,
+			int month_before, int year_before, int day_after, int month_after,
+			int year_after) {
 
 		String startDate = year_before + "-" + getStringNumber(month_before)
 				+ "-" + getStringNumber(day_before);
@@ -145,10 +176,11 @@ public class GAnalyticsService implements IGAService {
 		return calculateCountry(startDate, endDate);
 
 	}
-	
+
 	@Override
-	public Map<String,String> getVisitsBySSOO(int day_before, int month_before,
-			int year_before, int day_after, int month_after, int year_after) {
+	public Map<String, String> getVisitsBySSOO(int day_before,
+			int month_before, int year_before, int day_after, int month_after,
+			int year_after) {
 
 		String startDate = year_before + "-" + getStringNumber(month_before)
 				+ "-" + getStringNumber(day_before);
@@ -160,7 +192,7 @@ public class GAnalyticsService implements IGAService {
 	}
 
 	@Override
-	public Map<String,String> getPageVisits(int day_before, int month_before,
+	public Map<String, String> getPageVisits(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after) {
 
 		String startDate = year_before + "-" + getStringNumber(month_before)
@@ -204,44 +236,8 @@ public class GAnalyticsService implements IGAService {
 		return visits;
 	}
 
-
-	private Map<String, String> calculateCountry(String startDate, String endDate) {
-				Map<String, String> mapOS = new TreeMap<String, String>();
-				try {
-					TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-					dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-					Analytics analytics = initializeAnalytics();
-					String profileId = getProfileIdByUA(analytics, UA);
-					if (profileId == null) {
-						System.err.println("No profiles found.");
-				} else {
-						GaData gaData = executeCountryQuery(analytics, profileId,
-								startDate, endDate);
-						//printGaData(gaData);
-						try {
-							for (List<String> row : gaData.getRows()) {
-								List<String> data = new ArrayList<String>();
-							for (String colum : row) {
-									data.add(colum);
-								}
-								mapOS.put(data.get(0), data.get(1));
-							}
-		
-						} catch (NullPointerException ne) {
-							System.out.println("No visits to pages");
-							;
-						}
-					}
-				} catch (GoogleJsonResponseException e) {
-					System.err.println("There was a service error: "
-							+ e.getDetails().getCode() + " : "
-							+ e.getDetails().getMessage());
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-				return mapOS;
-			}
-	private Map<String, String> calculateGetPageVisits(String startDate, String endDate) {
+	private Map<String, String> calculateCountry(String startDate,
+			String endDate) {
 		Map<String, String> mapOS = new TreeMap<String, String>();
 		try {
 			TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -250,14 +246,52 @@ public class GAnalyticsService implements IGAService {
 			String profileId = getProfileIdByUA(analytics, UA);
 			if (profileId == null) {
 				System.err.println("No profiles found.");
-		} else {
-				GaData gaData = executeGetPagesVisits(analytics, profileId,
+			} else {
+				GaData gaData = executeCountryQuery(analytics, profileId,
 						startDate, endDate);
-				//printGaData(gaData);
+				// printGaData(gaData);
 				try {
 					for (List<String> row : gaData.getRows()) {
 						List<String> data = new ArrayList<String>();
-					for (String colum : row) {
+						for (String colum : row) {
+							data.add(colum);
+						}
+						mapOS.put(data.get(0), data.get(1));
+					}
+
+				} catch (NullPointerException ne) {
+					System.out.println("No visits to pages");
+					;
+				}
+			}
+		} catch (GoogleJsonResponseException e) {
+			System.err.println("There was a service error: "
+					+ e.getDetails().getCode() + " : "
+					+ e.getDetails().getMessage());
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return mapOS;
+	}
+
+	private Map<String, String> calculateGetPageVisits(String startDate,
+			String endDate) {
+		Map<String, String> mapOS = new TreeMap<String, String>();
+		try {
+			TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+			Analytics analytics = initializeAnalytics();
+			String profileId = getProfileIdByUA(analytics, UA);
+			if (profileId == null) {
+				System.err.println("No profiles found.");
+			} else {
+				GaData gaData = executeGetPagesVisits(analytics, profileId,
+						startDate, endDate);
+				// printGaData(gaData);
+				try {
+					for (List<String> row : gaData.getRows()) {
+						List<String> data = new ArrayList<String>();
+						for (String colum : row) {
 							data.add(colum);
 						}
 						mapOS.put(data.get(0), data.get(1));
@@ -287,14 +321,14 @@ public class GAnalyticsService implements IGAService {
 			String profileId = getProfileIdByUA(analytics, UA);
 			if (profileId == null) {
 				System.err.println("No profiles found.");
-		} else {
+			} else {
 				GaData gaData = executeSSOOQuery(analytics, profileId,
 						startDate, endDate);
-				//printGaData(gaData);
+				// printGaData(gaData);
 				try {
 					for (List<String> row : gaData.getRows()) {
 						List<String> data = new ArrayList<String>();
-					for (String colum : row) {
+						for (String colum : row) {
 							data.add(colum);
 						}
 						mapOS.put(data.get(0), data.get(1));
@@ -449,32 +483,32 @@ public class GAnalyticsService implements IGAService {
 			throws IOException {
 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
 				// profile id.
-				startDate,endDate, "ga:visits").setDimensions("ga:country").setSort("ga:visits").execute(); // Metrics.
-				
+				startDate, endDate, "ga:visits").setDimensions("ga:country")
+				.setSort("ga:visits").execute(); // Metrics.
+
 	}
-	
-	
+
 	private static GaData executeSSOOQuery(Analytics analytics,
 			String profileId, String startDate, String endDate)
 			throws IOException {
 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
 				// profile id.
-				startDate,endDate, "ga:visits").setDimensions("ga:operatingSystemVersion").setSort("ga:visits").execute(); // Metrics.
-				
+				startDate, endDate, "ga:visits")
+				.setDimensions("ga:operatingSystemVersion")
+				.setSort("ga:visits").execute(); // Metrics.
+
 	}
-	
+
 	private static GaData executeGetPagesVisits(Analytics analytics,
- 			String profileId, String startDate, String endDate)
- 			throws IOException {
- 		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
- 															// profile id.
- 				startDate, // Start date.
- 				endDate, // End date.
- 				"ga:visits") // Metrics.
-				.setDimensions("ga:pagePath")
-				.setSort("ga:visits")
-				.execute();
- 	}
+			String profileId, String startDate, String endDate)
+			throws IOException {
+		return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: +
+															// profile id.
+				startDate, // Start date.
+				endDate, // End date.
+				"ga:visits") // Metrics.
+				.setDimensions("ga:pagePath").setSort("ga:visits").execute();
+	}
 
 	/**
 	 * Show the data about the name profile and the visits associated
@@ -484,33 +518,33 @@ public class GAnalyticsService implements IGAService {
 	 */
 	private static void printGaData(GaData results) {
 		// Print info about the Google Analytics profile
-		System.out.println("printing results for profile: "
-				+ results.getProfileInfo().getProfileName());
-		System.out.println("printing results for web profile propery: "
-				+ results.getProfileInfo().getWebPropertyId());
-		System.out.println("printing results for account id: "
-				+ results.getProfileInfo().getAccountId());
-
-		if (results.getRows() == null || results.getRows().isEmpty()) {
-			System.out.println("No results Found.");
-		} else {
-
-			// Print column headers, in this case, the visits
-			for (ColumnHeaders header : results.getColumnHeaders()) {
-				System.out.printf("%30s", header.getName());
-			}
-			System.out.println();
-
-			// Print the visits of the website
-			for (List<String> row : results.getRows()) {
-				for (String column : row) {
-					System.out.printf("%30s", column);
-				}
-				System.out.println();
-			}
-
-			System.out.println();
-		}
+//		System.out.println("printing results for profile: "
+//				+ results.getProfileInfo().getProfileName());
+//		System.out.println("printing results for web profile propery: "
+//				+ results.getProfileInfo().getWebPropertyId());
+//		System.out.println("printing results for account id: "
+//				+ results.getProfileInfo().getAccountId());
+//
+//		if (results.getRows() == null || results.getRows().isEmpty()) {
+//			System.out.println("No results Found.");
+//		} else {
+//
+//			// Print column headers, in this case, the visits
+//			for (ColumnHeaders header : results.getColumnHeaders()) {
+//				System.out.printf("%30s", header.getName());
+//			}
+//			System.out.println();
+//
+//			// Print the visits of the website
+//			for (List<String> row : results.getRows()) {
+//				for (String column : row) {
+//					System.out.printf("%30s", column);
+//				}
+//				System.out.println();
+//			}
+//
+//			System.out.println();
+//		}
 	}
 
 	/**

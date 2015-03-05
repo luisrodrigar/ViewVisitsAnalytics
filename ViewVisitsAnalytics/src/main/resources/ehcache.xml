@@ -19,12 +19,22 @@
            timeToLiveSeconds="1200">
     </defaultCache>
 
-    <cache name="usuarios"
+    <cache name="actualVisits"
     	   maxBytesLocalHeap="2M" 
            eternal="false"
            overflowToDisk="true"
            timeToIdleSeconds="10"
            timeToLiveSeconds="10"
            statistics="true"
-          	/>      	
+     	/> 
+      <cache name="pastVisits"
+    	   maxBytesLocalHeap="2M" 
+           eternal="true"
+           overflowToDisk="true"
+           timeToIdleSeconds="10"
+           timeToLiveSeconds="10"
+           statistics="true"
+     	/>    	
+     	
+     	     	
 </ehcache>
