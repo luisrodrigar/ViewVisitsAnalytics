@@ -1,7 +1,6 @@
 package main.java.es.uniovi.innova;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -11,18 +10,34 @@ import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import main.java.es.uniovi.innova.factories.Factory;
 import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.ga.IPortalesService;
 import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
-import main.java.es.uniovi.innova.services.ga.implementation.portales.APILiferayPortalesDAO;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class VisitsPortlet extends GenericPortlet {
+	
+	private IGAService gaService;
+	private IPortalesService portalService;
+	private BeanFactory factory;
+	private Factory factoryService;
+	
+	
+	public void init(){
+		factory = new ClassPathXmlApplicationContext("beans.xml");
+		factoryService = (Factory) factory.getBean("factory");
+		gaService = factoryService.getServiceGoogleAnalytics();
+		portalService = factoryService.getServicePortales();
 
+	}
+	
+	
 	@Override
 	public void doView(RenderRequest request, RenderResponse response)
-			throws PortletException, IOException {
-		IPortalesService portalService = new APILiferayPortalesDAO();
-		IGAService gaService = new GAnalyticsService();
+			throws PortletException, IOException {;
 		gaService.setUA("UA-376062-58");
 		request.setAttribute("mapPortal", portalService.getPortales());
 		request.setAttribute("numVisitasDay",
@@ -50,23 +65,15 @@ public class VisitsPortlet extends GenericPortlet {
 		
 		IGAService gaService = new GAnalyticsService();
 		gaService.setUA("UA-376062-58");
-
-		int valor =  gaService
+		actionrequest.setAttribute("numVisitasIntervalo",gaService
 				.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
-						dayEnd, monthEnd, yearEnd);
-		Map<String,String> countries =  gaService.getVisitsByCountry(dayStart, monthStart, yearStart,
-						dayEnd, monthEnd, yearEnd);
-		
-		Map<String,String> ssoo =  gaService.getVisitsBySSOO(dayStart, monthStart, yearStart,
-				dayEnd, monthEnd, yearEnd);
-		
-		Map<String,String> pageVisits =  gaService.getPageVisits(dayStart, monthStart, yearStart,
-				dayEnd, monthEnd, yearEnd);
-		
-		actionrequest.setAttribute("numVisitasIntervalo",valor);
-		actionrequest.setAttribute("mapCountry",countries);
-		actionrequest.setAttribute("mapSO",ssoo);
-		actionrequest.setAttribute("mapPages",pageVisits);
+						dayEnd, monthEnd, yearEnd));
+		actionrequest.setAttribute("mapCountry",gaService.getVisitsByCountry(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd));
+		actionrequest.setAttribute("mapSO",gaService.getVisitsBySSOO(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd));
+		actionrequest.setAttribute("mapPages",gaService.getPageVisits(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd));
 	}
 
 
