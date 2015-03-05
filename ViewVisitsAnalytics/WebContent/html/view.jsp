@@ -171,17 +171,8 @@
       function drawChart() {
 
        // Create the data table.
-       /*  var dataCountry = new google.visualization.DataTable(); */
-/*         dataCountry.addColumn('string', 'Country');
-        dataCountry.addColumn('number', 'Visits'); */
-      //  dataCountry.addRows(dataPieCountry);
-  /*       dataCountry.addColumn('timeofday', 'Time of Day');
-        dataCountry.addColumn('number', 'Motivation Level');
-      */
- /*       var dataSO = new google.visualization.DataTable();
-       dataSO.addColumn('string', 'SSOO');
-       dataSO.addColumn('number', 'Visitas por ssoo de Android');
-      dataSO.addRows(dataPieSSOO);  */
+       
+    
       
       var dataCountry = new google.visualization.DataTable();
       dataCountry.addColumn('string', 'Pais');
@@ -190,35 +181,7 @@
          
 
         // Set chart options
-      /*   var optionsCountry = {'title':'Número de visitas hechas por pais',
-                       'width':400,
-                       'height':300}; */
-                      /*  dataPieCountry.addRows([
-                                		        [{v: [8, 0, 0], f: '8 am'}, 1],
-                                		        [{v: [9, 0, 0], f: '9 am'}, 2],
-                                		        [{v: [10, 0, 0], f:'10 am'}, 3],
-                                		        [{v: [11, 0, 0], f: '11 am'}, 4],
-                                		        [{v: [12, 0, 0], f: '12 pm'}, 5],
-                                		        [{v: [13, 0, 0], f: '1 pm'}, 6],
-                                		        [{v: [14, 0, 0], f: '2 pm'}, 7],
-                                		        [{v: [15, 0, 0], f: '3 pm'}, 8],
-                                		        [{v: [16, 0, 0], f: '4 pm'}, 9],
-                                		        [{v: [17, 0, 0], f: '5 pm'}, 10],
-                                		      ]); */
-      /*     var optionsCountry = {
-        		  width: 1000,
-        	        height: 563,
-        	        hAxis: {
-        	        	  title: 'Time of Day',
-        	              format: 'h:mm a',
-        	              gridlines: {count: 10}
-        	        },
-        	        vAxis: {
-        	          title: 'Rating (scale of 1-10)'
-        	        }
-        	      };          
-                       
-                                		      */             
+          
          var optionsSO = {'title':'Versiones de Android',
                 'width':400,
                 'height':300}; 
@@ -230,8 +193,6 @@
         
 
         // Instantiate and draw our chart, passing in some options.
-      /*   var chartCountry = new google.visualization.ColumnChart(document.getElementById('chart_div_country'));
-        chartCoutry.draw(dataCountry, optionsCountry);*/
          var chartCountry = new google.visualization.PieChart(document.getElementById('chart_div_country'));
         chartCountry.draw(dataCountry, optionsCountry);  
 
@@ -242,7 +203,7 @@
           dataSO.addRows(dataPieSSOO);
 
           var options = {
-            width: 400,
+            width: 300,
             height: 300,
             hAxis: {
               title: 'Version de android',
