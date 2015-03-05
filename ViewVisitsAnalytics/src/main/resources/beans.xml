@@ -13,8 +13,6 @@
            http://www.springframework.org/schema/cache/spring-cache.xsd">
 	
 
-
-	
 	<bean id="factory" class="main.java.es.uniovi.innova.factories.Factory">
 		<property name="serviceGoogleAnalytics" ref="gAnalyticsService"></property>
 		<property name="servicePortales" ref="aPILiferayPortalesDAO"></property>
