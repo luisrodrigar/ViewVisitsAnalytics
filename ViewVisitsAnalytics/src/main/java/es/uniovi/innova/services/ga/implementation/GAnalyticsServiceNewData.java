@@ -79,7 +79,6 @@ public class GAnalyticsServiceNewData extends GAnalyticsService {
 		System.out.println("> Caché variable - Numero de visitas en un mes");
 		return super.numOfVisitsByMonth(month, year);
 	}
-
 	/**
 	 * Number of visits during a specific year
 	 * 
