@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import main.java.es.uniovi.innova.services.ga.IGAService;
-import main.java.es.uniovi.innova.services.ga.implementation.util.DateFormat;
 
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -35,7 +34,6 @@ import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 import com.google.api.services.analytics.model.Profiles;
 import com.google.api.services.analytics.model.Webproperties;
 import com.google.api.services.analytics.model.Webproperty;
-
 import org.apache.commons.logging.*;
 
 /**
@@ -44,7 +42,7 @@ import org.apache.commons.logging.*;
  * @author luisrodrigar - DiiSandoval
  *
  */
-public abstract class GAnalyticsService implements IGAService {
+public class GAnalyticsService implements IGAService {
 
 	private static HttpTransport TRANSPORT;
 	private static final JacksonFactory JSON_FACTORY = JacksonFactory
@@ -87,8 +85,8 @@ public abstract class GAnalyticsService implements IGAService {
 	 */
 	@Override
 	public int numOfVisitsByDay(int day, int month, int year) {
-		String startDate = year + "-" + DateFormat.getStringNumber(month) + "-"
-				+ DateFormat.getStringNumber(day);
+		String startDate = year + "-" + getStringNumber(month) + "-"
+				+ getStringNumber(day);
 		String endDate = startDate;
 		return calculateVisits(startDate, endDate);
 	}
@@ -103,12 +101,12 @@ public abstract class GAnalyticsService implements IGAService {
 	 */
 	@Override
 	public int numOfVisitsByMonth(int month, int year) {
-		String startDate = year + "-" + DateFormat.getStringNumber(month) + "-01";
+		String startDate = year + "-" + getStringNumber(month) + "-01";
 		String endDate = year
 				+ "-"
-				+ DateFormat.getStringNumber(month)
+				+ getStringNumber(month)
 				+ "-"
-				+ DateFormat.getStringNumber(Calendar.getInstance().getActualMaximum(
+				+ getStringNumber(Calendar.getInstance().getActualMaximum(
 						Calendar.DAY_OF_MONTH));
 		return calculateVisits(startDate, endDate);
 	}
@@ -130,25 +128,50 @@ public abstract class GAnalyticsService implements IGAService {
 	public int numOfVisitsBetweenTwoDates(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after) {
 
-		String startDate = year_before + "-" + DateFormat.getStringNumber(month_before)
-				+ "-" + DateFormat.getStringNumber(day_before);
-		String endDate = year_after + "-" + DateFormat.getStringNumber(month_after) + "-"
-				+ DateFormat.getStringNumber(day_after);
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
 
+		
+		System.out.println("-------------------------Entre el intervalo de fechas " + isFechaActual(startDate, endDate) + "esta en la fecha actual");
 		return calculateVisits(startDate, endDate);
 
 	}
 
+	private boolean isFechaActual(String startDate, String endDate) {
+		Date fechaActual = new Date();
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaNow = formater.format(fechaActual);
+
+		try {
+			fechaActual = formater.parse(fechaNow);
+			Date fecha1 = formater.parse(startDate);
+			Date fecha2 = formater.parse(endDate);
+
+			if (fechaActual.before(fecha2) && fechaActual.after(fecha1)) {
+				return true;
+			}
+			return false;
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+
+		return false;
+
+	}
 
 	@Override
 	public Map<String, String> getVisitsByCountry(int day_before,
 			int month_before, int year_before, int day_after, int month_after,
 			int year_after) {
 
-		String startDate = year_before + "-" + DateFormat.getStringNumber(month_before)
-				+ "-" + DateFormat.getStringNumber(day_before);
-		String endDate = year_after + "-" + DateFormat.getStringNumber(month_after) + "-"
-				+ DateFormat.getStringNumber(day_after);
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
 
 		return calculateCountry(startDate, endDate);
 
@@ -159,10 +182,10 @@ public abstract class GAnalyticsService implements IGAService {
 			int month_before, int year_before, int day_after, int month_after,
 			int year_after) {
 
-		String startDate = year_before + "-" + DateFormat.getStringNumber(month_before)
-				+ "-" + DateFormat.getStringNumber(day_before);
-		String endDate = year_after + "-" + DateFormat.getStringNumber(month_after) + "-"
-				+ DateFormat.getStringNumber(day_after);
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
 
 		return calculateSSOO(startDate, endDate);
 
@@ -172,10 +195,10 @@ public abstract class GAnalyticsService implements IGAService {
 	public Map<String, String> getPageVisits(int day_before, int month_before,
 			int year_before, int day_after, int month_after, int year_after) {
 
-		String startDate = year_before + "-" + DateFormat.getStringNumber(month_before)
-				+ "-" + DateFormat.getStringNumber(day_before);
-		String endDate = year_after + "-" + DateFormat.getStringNumber(month_after) + "-"
-				+ DateFormat.getStringNumber(day_after);
+		String startDate = year_before + "-" + getStringNumber(month_before)
+				+ "-" + getStringNumber(day_before);
+		String endDate = year_after + "-" + getStringNumber(month_after) + "-"
+				+ getStringNumber(day_after);
 
 		return calculateGetPageVisits(startDate, endDate);
 
@@ -326,6 +349,17 @@ public abstract class GAnalyticsService implements IGAService {
 		return mapOS;
 	}
 
+	/**
+	 * If number less than 10, it will return: 0'number' If number more than 9,
+	 * the response is the number
+	 * 
+	 * @param number
+	 *            for checking
+	 * @return number checked
+	 */
+	private String getStringNumber(int number) {
+		return (String) (number < 10 ? "0" + number : "" + number);
+	}
 
 	/**
 	 * Task about authorization on Google Analytics

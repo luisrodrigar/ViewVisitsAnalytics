@@ -31,21 +31,6 @@
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
 		p:config-location="classpath:ehcache.xml" />
 	-->
-		<!-- Ehcache -->
-	
-	<cache:annotation-driven />
-
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-		<property name="cacheManager" ref="ehcache" />
-	</bean>
-
-	<bean id="ehcache"
-		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
-		p:config-location="classpath:ehcache.xml">
-		<property name="shared" value="true" />
-	</bean>
-
-	<!-- Fin de Ehcache -->
 
 
 </beans> 

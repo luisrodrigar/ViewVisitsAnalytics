@@ -1,9 +1,6 @@
 package main.java.es.uniovi.innova;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -17,43 +14,43 @@ import main.java.es.uniovi.innova.factories.Factory;
 import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.ga.IPortalesService;
 import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
-import main.java.es.uniovi.innova.services.ga.implementation.util.DateFormat;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class VisitsPortlet extends GenericPortlet {
-
-	private IGAService gaServiceNewData;
-	private IGAService gaServiceOldData;
+	
+	private IGAService gaService;
 	private IPortalesService portalService;
 	private BeanFactory factory;
 	private Factory factoryService;
-
-	public void init() {
+	
+	
+	public void init(){
 		factory = new ClassPathXmlApplicationContext("beans.xml");
 		factoryService = (Factory) factory.getBean("factory");
-		gaServiceNewData = factoryService.getServiceGoogleAnalyticsNewData();
-		gaServiceOldData = factoryService.getServiceGoogleAnalyticsOldData();
+		gaService = factoryService.getServiceGoogleAnalytics();
 		portalService = factoryService.getServicePortales();
 
 	}
-
+	
+	
 	@Override
 	public void doView(RenderRequest request, RenderResponse response)
-			throws PortletException, IOException {
-		;
-		gaServiceNewData.setUA("UA-376062-58");
+			throws PortletException, IOException {;
+		gaService.setUA("UA-376062-58");
 		request.setAttribute("mapPortal", portalService.getPortales());
 		request.setAttribute("numVisitasDay",
-				gaServiceNewData.numOfVisitsByDay(6, 1, 2015));
+				gaService.numOfVisitsByDay(6, 1, 2015));
 		request.setAttribute("numVisitasMonth",
-				gaServiceNewData.numOfVisitsByMonth(12, 2014));
+				gaService.numOfVisitsByMonth(12, 2014));
 		request.setAttribute("numVisitasYear",
-				gaServiceNewData.numOfVisitsByYear(2015));
+				gaService.numOfVisitsByYear(2015));
 
 		include("/html/view.jsp", request, response);
 	}
+
+	
 
 	@Override
 	public void processAction(ActionRequest actionrequest, ActionResponse actionResponse) {
@@ -65,27 +62,20 @@ public class VisitsPortlet extends GenericPortlet {
 		int dayEnd = Integer.parseInt(actionrequest.getParameter("day_end"));
 		int yearEnd = Integer.parseInt(actionrequest.getParameter("year_end"));
 
-		IGAService gaService = null;
-		if(DateFormat.isFechaActual(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd))
-			gaService = gaServiceNewData;
-		else
-			gaService=gaServiceOldData;
 		
-		
-		    gaService.setUA("UA-376062-58");
-		 	actionrequest.setAttribute("numVisitasIntervalo",gaService
-					.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
-							dayEnd, monthEnd, yearEnd));
-			actionrequest.setAttribute("mapCountry",gaService.getVisitsByCountry(dayStart, monthStart, yearStart,
-					dayEnd, monthEnd, yearEnd));
-			actionrequest.setAttribute("mapSO",gaService.getVisitsBySSOO(dayStart, monthStart, yearStart,
-					dayEnd, monthEnd, yearEnd));
-			actionrequest.setAttribute("mapPages",gaService.getPageVisits(dayStart, monthStart, yearStart,
-					dayEnd, monthEnd, yearEnd));
-		
-		
-	
+		IGAService gaService = new GAnalyticsService();
+		gaService.setUA("UA-376062-58");
+		actionrequest.setAttribute("numVisitasIntervalo",gaService
+				.numOfVisitsBetweenTwoDates(dayStart, monthStart, yearStart,
+						dayEnd, monthEnd, yearEnd));
+		actionrequest.setAttribute("mapCountry",gaService.getVisitsByCountry(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd));
+		actionrequest.setAttribute("mapSO",gaService.getVisitsBySSOO(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd));
+		actionrequest.setAttribute("mapPages",gaService.getPageVisits(dayStart, monthStart, yearStart,
+				dayEnd, monthEnd, yearEnd));
 	}
+
 
 	protected void include(String path, RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
@@ -99,5 +89,4 @@ public class VisitsPortlet extends GenericPortlet {
 			portletRequestDispatcher.include(renderRequest, renderResponse);
 		}
 	}
-
 }
