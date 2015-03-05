@@ -4,19 +4,21 @@ import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.ga.IPortalesService;
 import main.java.es.uniovi.innova.services.ga.implementation.GAnalyticsServiceNewData;
 import main.java.es.uniovi.innova.services.ga.implementation.GAnalyticsServiceOldData;
+import main.java.es.uniovi.innova.services.ga.implementation.google.analytics.GAnalyticsService;
 
 public class Factory {
 
-	private GAnalyticsServiceNewData serviceGoogleAnalyticsNewData;
-	private GAnalyticsServiceOldData serviceGoogleAnalyticsOldData;
-	
+	private IGAService serviceGoogleAnalyticsNewData;
+	private IGAService serviceGoogleAnalyticsOldData;
+	private IPortalesService servicePortales;
+
 	public IGAService getServiceGoogleAnalyticsNewData() {
 		return serviceGoogleAnalyticsNewData;
 	}
 
 	public void setServiceGoogleAnalyticsNewData(
 			IGAService serviceGoogleAnalyticsNewData) {
-		this.serviceGoogleAnalyticsNewData = (GAnalyticsServiceNewData) serviceGoogleAnalyticsNewData;
+		this.serviceGoogleAnalyticsNewData = serviceGoogleAnalyticsNewData;
 	}
 
 	public IGAService getServiceGoogleAnalyticsOldData() {
@@ -25,11 +27,8 @@ public class Factory {
 
 	public void setServiceGoogleAnalyticsOldData(
 			IGAService serviceGoogleAnalyticsOldData) {
-		this.serviceGoogleAnalyticsOldData = (GAnalyticsServiceOldData) serviceGoogleAnalyticsOldData;
+		this.serviceGoogleAnalyticsOldData = serviceGoogleAnalyticsOldData;
 	}
-
-	private IPortalesService servicePortales;
-
 
 	public IPortalesService getServicePortales() {
 		return servicePortales;
