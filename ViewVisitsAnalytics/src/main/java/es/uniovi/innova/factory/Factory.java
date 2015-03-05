@@ -4,16 +4,10 @@ import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.portal.IPortalesService;
 
 public class Factory {
-	private IGAService serviceGoggleAnalytics;
+	private IGAService serviceGoggleAnalyticsTemp;
+	private IGAService serviceGoggleAnalyticsPermanent;
 	private IPortalesService servicePortales;
 
-	public IGAService getServiceGoggleAnalytics() {
-		return serviceGoggleAnalytics;
-	}
-
-	public void setServiceGoggleAnalytics(IGAService serviceGoggleAnalytics) {
-		this.serviceGoggleAnalytics = serviceGoggleAnalytics;
-	}
 
 	public IPortalesService getServicePortales() {
 		return servicePortales;
@@ -21,6 +15,23 @@ public class Factory {
 
 	public void setServicePortales(IPortalesService servicePortales) {
 		this.servicePortales = servicePortales;
+	}
+
+	public IGAService getServiceGoggleAnalyticsTemp() {
+		return serviceGoggleAnalyticsTemp;
+	}
+
+	public void setServiceGoggleAnalyticsTemp(IGAService serviceGoggleAnalyticsTemp) {
+		this.serviceGoggleAnalyticsTemp = serviceGoggleAnalyticsTemp;
+	}
+
+	public IGAService getServiceGoggleAnalyticsPermanent() {
+		return serviceGoggleAnalyticsPermanent;
+	}
+
+	public void setServiceGoggleAnalyticsPermanent(
+			IGAService serviceGoggleAnalyticsPermanent) {
+		this.serviceGoggleAnalyticsPermanent = serviceGoggleAnalyticsPermanent;
 	}
 
 }

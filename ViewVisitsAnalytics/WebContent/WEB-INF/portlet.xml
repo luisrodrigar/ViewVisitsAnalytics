@@ -15,8 +15,8 @@
 			<portlet-mode>VIEW</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Visits From Google Analytics</title>
-			<short-title>View Visits Web Sites</short-title>
+			<title>Data about visits from websites</title>
+			<short-title>Visitas sitios web</short-title>
 		</portlet-info>
 	</portlet>
 </portlet-app>

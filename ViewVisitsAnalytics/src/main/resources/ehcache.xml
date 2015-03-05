@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
-	<diskStore path="java.io.tmpdir" />
-	<cache name="visitsCache" maxElementsInMemory="1000" eternal="false"
-		timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true"
-		maxElementsOnDisk="10000000" diskPersistent="false"
-		diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU" />
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true">
+         
+ 	<diskStore path="java.io.tmpdir" />       
+         
+	<transactionManagerLookup class="net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup"
+                              properties="jndiName=java:/TransactionManager" propertySeparator=";"/>
+	
+	<defaultCache
+           maxEntriesLocalHeap="0"
+           eternal="false"
+           overflowToDisk="true"
+           timeToIdleSeconds="1200"
+           timeToLiveSeconds="1200">
+    </defaultCache>
+	
+	<cache name="visitsPermanent" overflowToDisk="true" eternal="true" maxBytesLocalHeap="5M" statistics="true"/>
+
+	<cache name="visitsTemp" overflowToDisk="true" eternal="false" maxBytesLocalHeap="256K"
+		timeToIdleSeconds="1200" timeToLiveSeconds="1200" statistics="true"/>
+
 </ehcache>

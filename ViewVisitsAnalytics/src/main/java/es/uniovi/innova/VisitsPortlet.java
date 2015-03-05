@@ -17,13 +17,17 @@ import javax.portlet.RenderResponse;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.liferay.portal.model.Group;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.WebKeys;
+
 import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.portal.IPortalesService;
 import main.java.es.uniovi.innova.factory.Factory;
 
 public class VisitsPortlet extends GenericPortlet {
 	
-	private IGAService gaService;
+	private IGAService gaServiceTemp, gaServicePermanent;
 	private IPortalesService portalService;
 	private BeanFactory factory;
 	private Factory factoryService;
@@ -32,7 +36,8 @@ public class VisitsPortlet extends GenericPortlet {
 	public void init(){
 		factory = new ClassPathXmlApplicationContext("beans.xml");
 	    factoryService = (Factory) factory.getBean("factory");
-	    gaService = factoryService.getServiceGoggleAnalytics();
+	    gaServiceTemp = factoryService.getServiceGoggleAnalyticsTemp();
+	    gaServicePermanent = factoryService.getServiceGoggleAnalyticsPermanent();
 		portalService = factoryService.getServicePortales();
 	}
 	
@@ -58,7 +63,10 @@ public class VisitsPortlet extends GenericPortlet {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		gaService.setUA(portalID);
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+		Group curGroup = themeDisplay.getScopeGroup();
+		curGroup.getGroupId();
 		Map<String, String> mapPortales = portalService.getPortales();
 		for(String portal : mapPortales.keySet())
 			if(mapPortales.get(portal).equals(portalID))
@@ -66,10 +74,24 @@ public class VisitsPortlet extends GenericPortlet {
 		request.setAttribute("id", portalID);
 		request.setAttribute("fInicio",fInicio.getDate()+"/"+((Integer)fInicio.getMonth()+1)+"/"+((Integer)fInicio.getYear()+1900));
 		request.setAttribute("fFin",fFin.getDate()+"/"+((Integer)fFin.getMonth()+1)+"/"+((Integer)fFin.getYear()+1900));
-		request.setAttribute("visits",gaService.getVisitsByInterval(fInicio, fFin));
-		request.setAttribute("visitsPage",gaService.getVisitsByPage(fInicio, fFin));
-		request.setAttribute("visitsOS", gaService.getVisitsByOS(fInicio, fFin));
-		request.setAttribute("visitsBrowser", gaService.getVisitsByBrowser(fInicio, fFin));
+		if(equalsDates(fInicio, new Date()) || equalsDates(fFin, new Date())){
+			request.setAttribute("visits",gaServiceTemp.getVisitsByInterval(fInicio, fFin, portalID));
+			request.setAttribute("visitsPage",gaServiceTemp.getVisitsByPage(fInicio, fFin, portalID));
+			request.setAttribute("visitsOS", gaServiceTemp.getVisitsByOS(fInicio, fFin, portalID));
+			request.setAttribute("visitsBrowser", gaServiceTemp.getVisitsByBrowser(fInicio, fFin, portalID));
+		}else{
+			request.setAttribute("visits",gaServicePermanent.getVisitsByInterval(fInicio, fFin, portalID));
+			request.setAttribute("visitsPage",gaServicePermanent.getVisitsByPage(fInicio, fFin, portalID));
+			request.setAttribute("visitsOS", gaServicePermanent.getVisitsByOS(fInicio, fFin, portalID));
+			request.setAttribute("visitsBrowser", gaServicePermanent.getVisitsByBrowser(fInicio, fFin, portalID));
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private boolean equalsDates(Date date1, Date date2){
+		if(date1.getDate()==date2.getDate() && date1.getMonth()==date2.getMonth() && date1.getYear()==date2.getYear())
+			return true;
+		return false;
 	}
 	
 	protected void include(String path, RenderRequest renderRequest,

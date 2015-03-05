@@ -8,12 +8,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-//import org.springframework.cache.annotation.Cacheable;
 import java.util.Map;
 import java.util.TreeMap;
-
 import main.java.es.uniovi.innova.services.ga.IGAService;
-
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -81,9 +78,9 @@ public class GAnalyticsService implements IGAService {
 	 * @return the visits in this interval
 	 */
 	@Override
-	// @Cacheable(value="visitsCache",
-	// key="#UA.toString().append(#start.toString()).append(#end.toString())")
-	public int getVisitsByInterval(Date start, Date end) {
+	public int getVisitsByInterval(Date start, Date end, String ua) {
+		System.out.println("AÑADIDO A CACHE");
+		setUA(ua);
 		String startDate, endDate;
 		if (start.compareTo(end) <= 0) {
 			startDate = getStringDate(start);
@@ -96,7 +93,8 @@ public class GAnalyticsService implements IGAService {
 	}
 
 	@Override
-	public Map<String, String> getVisitsByPage(Date start, Date end) {
+	public Map<String, String> getVisitsByPage(Date start, Date end, String ua) {
+		setUA(ua);
 		String startDate, endDate;
 		if (start.compareTo(end) <= 0) {
 			startDate = getStringDate(start);
@@ -109,7 +107,8 @@ public class GAnalyticsService implements IGAService {
 	}
 	
 	@Override
-	public Map<String, String> getVisitsByOS(Date start, Date end) {
+	public Map<String, String> getVisitsByOS(Date start, Date end, String ua) {
+		setUA(ua);
 		String startDate, endDate;
 		if (start.compareTo(end) <= 0) {
 			startDate = getStringDate(start);
@@ -122,7 +121,8 @@ public class GAnalyticsService implements IGAService {
 	}
 	
 	@Override
-	public Map<String, String> getVisitsByBrowser(Date start, Date end) {
+	public Map<String, String> getVisitsByBrowser(Date start, Date end, String ua) {
+		setUA(ua);
 		String startDate, endDate;
 		if(start==null && end==null){
 			startDate = "yesterday";

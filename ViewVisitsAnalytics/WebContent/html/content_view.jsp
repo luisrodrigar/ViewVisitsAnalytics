@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@ page import="java.util.*"%>
+
 <portlet:defineObjects />
+
 <%
 	Map<String, String> map = (Map<String, String>) renderRequest
 	.getAttribute("mapPortal");
@@ -13,26 +15,17 @@
 %>
 <div id="prueba">
 	<div class="page-header">
-		<h3>
+		<h1>
 			Obtener información de sitios web <br><small>Google Analytics</small>
-		</h3>
+		</h1>
 	</div>
+	
+	<%
+	
+	%>
 	<form class="form-horizontal"
 		action="<portlet:actionURL></portlet:actionURL>" method="post">
-		<div class="form-group">
-			<label for="portal" class="col-sm-2">Sitio Web</label>
-			<div class="col-sm-6">
-				<select class="form-control" name="portal" id="portal">
-					<%
-						for (String portal : map.keySet()) {
-					%>
-					<option value="<%=map.get(portal)%>"><%=portal%></option>
-					<%
-						}
-					%>
-				</select>
-			</div>
-		</div>
+		<input type="hidden" value="<%=%>"/>
 		<div class="form-group">
 			<label for="inicio" class="col-sm-2">Inicio</label>
 			<div class="col-sm-6">
@@ -55,9 +48,9 @@
 %>
 <div id="info">
 	<hr>
-	<h5>
+	<h3>
 		Información de "<%=renderRequest.getAttribute("name")%>"
-	</h5>
+	</h3>
 	<p>
 		Identificador
 		<%=renderRequest.getAttribute("id")%>
