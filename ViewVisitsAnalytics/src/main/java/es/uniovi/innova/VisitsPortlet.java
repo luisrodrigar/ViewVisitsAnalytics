@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
@@ -13,24 +12,18 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.liferay.portal.model.Group;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.WebKeys;
-
 import main.java.es.uniovi.innova.services.ga.IGAService;
 import main.java.es.uniovi.innova.services.portal.IPortalesService;
 import main.java.es.uniovi.innova.factory.Factory;
 
 public class VisitsPortlet extends GenericPortlet {
 	
-	private IGAService gaServiceTemp, gaServicePermanent;
-	private IPortalesService portalService;
-	private BeanFactory factory;
-	private Factory factoryService;
+	protected IGAService gaServiceTemp, gaServicePermanent;
+	protected IPortalesService portalService;
+	protected BeanFactory factory;
+	protected Factory factoryService;
 	
 	@Override
 	public void init(){
@@ -65,12 +58,6 @@ public class VisitsPortlet extends GenericPortlet {
 			e.printStackTrace();
 		}
 		
-		
-		// TODO: THINK ABOUT HOW TO IMPLEMENT THE CONTAIN PORTLET
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
-		Group curGroup = themeDisplay.getScopeGroup();
-		curGroup.getGroupId();
-		
 		Map<String, String> mapPortales = portalService.getPortales();
 		
 		for(String portal : mapPortales.keySet())
@@ -89,7 +76,7 @@ public class VisitsPortlet extends GenericPortlet {
 	
 	}
 	
-	private void executeGetData(ActionRequest request, IGAService service, Date fInicio, Date fFin, String portalID){
+	protected void executeGetData(ActionRequest request, IGAService service, Date fInicio, Date fFin, String portalID){
 		// Data about visits between the input dates
 		request.setAttribute("visits",service.getVisitsByInterval(fInicio, fFin, portalID));
 		// Data about visits per page
@@ -102,7 +89,7 @@ public class VisitsPortlet extends GenericPortlet {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private boolean equalsDates(Date date1, Date date2){
+	protected boolean equalsDates(Date date1, Date date2){
 		if(date1.getDate()==date2.getDate() && date1.getMonth()==date2.getMonth() && date1.getYear()==date2.getYear())
 			return true;
 		return false;

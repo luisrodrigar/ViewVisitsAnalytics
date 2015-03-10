@@ -10,7 +10,7 @@ import main.java.es.uniovi.innova.services.portal.IPortalesService;
 import com.liferay.portal.SystemException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-
+import com.liferay.portal.theme.ThemeDisplay;
 public class APILiferayPortalesDAO implements IPortalesService {
 
 	final static Logger log = LoggerFactory.getLogger(APILiferayPortalesDAO.class);
@@ -33,6 +33,17 @@ public class APILiferayPortalesDAO implements IPortalesService {
 			e.printStackTrace();
 		}
 		log.info("Portal have been stored successfully!");
+		return mapPortal;
+	}
+
+	@Override
+	@Cacheable(value = "portalCache", key = "#root.methodName.concat(#themeDisplay.toString())")
+	public Map<String, String> getPortalContent(ThemeDisplay themeDisplay) {
+		log.info("Portal cache || getting content website portal");
+		Map<String, String> mapPortal = new HashMap<String, String>();
+		Group group = themeDisplay.getScopeGroup();
+		mapPortal.put("name", group.getDescriptiveName());
+		mapPortal.put("idGoogleAnalytics", group.getTypeSettingsProperties().getProperty("googleAnalyticsId"));
 		return mapPortal;
 	}
 

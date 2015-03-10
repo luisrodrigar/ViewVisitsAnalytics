@@ -4,4 +4,7 @@
 	<category name="category.sample">
 		<portlet id="ViewVisistAnalytics"/>
 	</category>
+	<category name="category.sample">
+		<portlet id="ViewVisistAnalyticsContent"></portlet>
+	</category>
 </display>

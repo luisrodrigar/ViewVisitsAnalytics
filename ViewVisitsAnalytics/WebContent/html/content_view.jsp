@@ -5,18 +5,18 @@
 
 <%
 	Map<String, String> map = (Map<String, String>) renderRequest
-	.getAttribute("mapPortal");
+		.getAttribute("mapPortal");
 	Map<String, String> mapVisitsPage = (Map<String, String>) renderRequest
-	.getAttribute("visitsPage");
+		.getAttribute("visitsPage");
 	Map<String, String> mapOS = (Map<String, String>) renderRequest
-	.getAttribute("visitsOS");
+		.getAttribute("visitsOS");
 	Map<String, String> mapBrowser = (Map<String, String>) renderRequest
-	.getAttribute("visitsBrowser");
+		.getAttribute("visitsBrowser");
 %>
 <div id="prueba">
 	<div class="page-header">
 		<h1>
-			Obtener información de sitios web <br><small>Google Analytics</small>
+			Obtener información del sitio web <br><small>Google Analytics</small>
 		</h1>
 	</div>
 	
@@ -25,7 +25,12 @@
 	%>
 	<form class="form-horizontal"
 		action="<portlet:actionURL></portlet:actionURL>" method="post">
-		<input type="hidden" value="<%=%>"/>
+		<div class="form-group">
+			<label for="name" class="col-sm-2">Sitio Web</label>
+		<div class="col-sm-6">
+			<input class="form-control" id="name" name="name" type="text" value="  <%=map.get("name") %>" readonly>
+		</div>
+		</div>
 		<div class="form-group">
 			<label for="inicio" class="col-sm-2">Inicio</label>
 			<div class="col-sm-6">

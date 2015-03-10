@@ -19,4 +19,23 @@
 			<short-title>Visitas sitios web</short-title>
 		</portlet-info>
 	</portlet>
+	<portlet>
+		<description>View the visits of the currently content website</description>
+		<portlet-name>ViewVisistAnalyticsContent</portlet-name>
+		<display-name>View Visits - Google Analytics</display-name>
+		<portlet-class>main.java.es.uniovi.innova.VisitsPortletContent</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/content_view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Data about visits from content website</title>
+			<short-title>Visitas del sitio web actual</short-title>
+		</portlet-info>
+	</portlet>
 </portlet-app>
