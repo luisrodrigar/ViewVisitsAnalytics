@@ -20,5 +20,8 @@
 
 	<cache name="visitsTemp" overflowToDisk="true" eternal="false" maxBytesLocalHeap="256K"
 		timeToIdleSeconds="1200" timeToLiveSeconds="1200" statistics="true"/>
+		
+	<cache name="portalCache" overflowToDisk="true" eternal="false" maxBytesLocalHeap="1M"
+		timeToIdleSeconds="2400" timeToLiveSeconds="2400" statistics="true"/>
 
 </ehcache>

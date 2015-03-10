@@ -10,7 +10,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import main.java.es.uniovi.innova.services.ga.IGAService;
+
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -37,6 +42,8 @@ import com.google.api.services.analytics.model.Webproperty;
  *
  */
 public class GAnalyticsService implements IGAService {
+	
+	final static Logger log = LoggerFactory.getLogger(GAnalyticsService.class);
 
 	private static HttpTransport TRANSPORT;
 	private static final JacksonFactory JSON_FACTORY = JacksonFactory
@@ -79,7 +86,7 @@ public class GAnalyticsService implements IGAService {
 	 */
 	@Override
 	public int getVisitsByInterval(Date start, Date end, String ua) {
-		System.out.println("AÑADIDO A CACHE");
+		log.info("Stuffs to do: get the visits from the input interval");
 		setUA(ua);
 		String startDate, endDate;
 		if (start.compareTo(end) <= 0) {
@@ -94,6 +101,7 @@ public class GAnalyticsService implements IGAService {
 
 	@Override
 	public Map<String, String> getVisitsByPage(Date start, Date end, String ua) {
+		log.info("Stuffs to do: get the visits per web page from a website");
 		setUA(ua);
 		String startDate, endDate;
 		if (start.compareTo(end) <= 0) {
@@ -108,6 +116,7 @@ public class GAnalyticsService implements IGAService {
 	
 	@Override
 	public Map<String, String> getVisitsByOS(Date start, Date end, String ua) {
+		log.info("Stuffs to do: get the visits by operative system");
 		setUA(ua);
 		String startDate, endDate;
 		if (start.compareTo(end) <= 0) {
@@ -122,6 +131,7 @@ public class GAnalyticsService implements IGAService {
 	
 	@Override
 	public Map<String, String> getVisitsByBrowser(Date start, Date end, String ua) {
+		log.info("Stuffs to do: get the visits by web browser");
 		setUA(ua);
 		String startDate, endDate;
 		if(start==null && end==null){
@@ -164,7 +174,6 @@ public class GAnalyticsService implements IGAService {
 			} else {
 				GaData gaData = executeDataQueryGetVisits(analytics, profileId,
 						startDate, endDate);
-				//printGaData(gaData);
 				try {
 					visits = Integer.valueOf(gaData.getRows().get(0).get(0));
 				} catch (NullPointerException ne) {
@@ -194,7 +203,6 @@ public class GAnalyticsService implements IGAService {
 			} else {
 				GaData gaData = executeDataQueryGetPagesVisits(analytics,
 						profileId, startDate, endDate);
-				//printGaData(gaData);
 				try {
 					for (List<String> row : gaData.getRows()) {
 						List<String> data = new ArrayList<String>();
@@ -231,7 +239,6 @@ public class GAnalyticsService implements IGAService {
 			} else {
 				GaData gaData = executeDataQueryGetOS(analytics, profileId,
 						startDate, endDate);
-				//printGaData(gaData);
 				try {
 					for (List<String> row : gaData.getRows()) {
 						List<String> data = new ArrayList<String>();
@@ -269,7 +276,6 @@ public class GAnalyticsService implements IGAService {
 			} else {
 				GaData gaData = executeDataQueryGetBrowser(analytics, profileId,
 						startDate, endDate);
-				//printGaData(gaData);
 				try {
 					for (List<String> row : gaData.getRows()) {
 						List<String> data = new ArrayList<String>();

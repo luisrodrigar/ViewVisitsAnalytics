@@ -57,6 +57,7 @@ public class VisitsPortlet extends GenericPortlet {
 		String fin = (String) request.getParameter("fecha_fin");
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date fInicio = null, fFin = null;
+		
 		try {
 			fInicio = format.parse(inicio);
 			fFin = format.parse(fin);
@@ -64,27 +65,40 @@ public class VisitsPortlet extends GenericPortlet {
 			e.printStackTrace();
 		}
 		
+		
+		// TODO: THINK ABOUT HOW TO IMPLEMENT THE CONTAIN PORTLET
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 		Group curGroup = themeDisplay.getScopeGroup();
 		curGroup.getGroupId();
+		
 		Map<String, String> mapPortales = portalService.getPortales();
+		
 		for(String portal : mapPortales.keySet())
 			if(mapPortales.get(portal).equals(portalID))
 				request.setAttribute("name", portal);
+		
 		request.setAttribute("id", portalID);
+		
 		request.setAttribute("fInicio",fInicio.getDate()+"/"+((Integer)fInicio.getMonth()+1)+"/"+((Integer)fInicio.getYear()+1900));
 		request.setAttribute("fFin",fFin.getDate()+"/"+((Integer)fFin.getMonth()+1)+"/"+((Integer)fFin.getYear()+1900));
-		if(equalsDates(fInicio, new Date()) || equalsDates(fFin, new Date())){
-			request.setAttribute("visits",gaServiceTemp.getVisitsByInterval(fInicio, fFin, portalID));
-			request.setAttribute("visitsPage",gaServiceTemp.getVisitsByPage(fInicio, fFin, portalID));
-			request.setAttribute("visitsOS", gaServiceTemp.getVisitsByOS(fInicio, fFin, portalID));
-			request.setAttribute("visitsBrowser", gaServiceTemp.getVisitsByBrowser(fInicio, fFin, portalID));
-		}else{
-			request.setAttribute("visits",gaServicePermanent.getVisitsByInterval(fInicio, fFin, portalID));
-			request.setAttribute("visitsPage",gaServicePermanent.getVisitsByPage(fInicio, fFin, portalID));
-			request.setAttribute("visitsOS", gaServicePermanent.getVisitsByOS(fInicio, fFin, portalID));
-			request.setAttribute("visitsBrowser", gaServicePermanent.getVisitsByBrowser(fInicio, fFin, portalID));
-		}
+		
+		if(equalsDates(fInicio, new Date()) || equalsDates(fFin, new Date()))
+			executeGetData(request, gaServiceTemp, fInicio, fFin, portalID);
+		else
+			executeGetData(request, gaServicePermanent, fInicio, fFin, portalID);
+	
+	}
+	
+	private void executeGetData(ActionRequest request, IGAService service, Date fInicio, Date fFin, String portalID){
+		// Data about visits between the input dates
+		request.setAttribute("visits",service.getVisitsByInterval(fInicio, fFin, portalID));
+		// Data about visits per page
+		request.setAttribute("visitsPage",service.getVisitsByPage(fInicio, fFin, portalID));
+		// Data about visits by operative system
+		request.setAttribute("visitsOS", service.getVisitsByOS(fInicio, fFin, portalID));
+		// Data about visits by web browser
+		request.setAttribute("visitsBrowser", service.getVisitsByBrowser(fInicio, fFin, portalID));
+	
 	}
 	
 	@SuppressWarnings("deprecation")
