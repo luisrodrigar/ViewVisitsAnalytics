@@ -1,4 +1,4 @@
-package main.java.es.uniovi.innova;
+package es.uniovi.innova.ViewVisitsAnalytics;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -48,16 +48,19 @@ public class VisitsPortletContent extends VisitsPortlet{
 		
 		String portalID = mapPortal.get("idGoogleAnalytics");
 		
-		request.setAttribute("name", mapPortal.get("name"));
-		request.setAttribute("id", portalID);
+		if(portalID!=null && !portalID.isEmpty()) {
 		
-		request.setAttribute("fInicio",fInicio.getDate()+"/"+((Integer)fInicio.getMonth()+1)+"/"+((Integer)fInicio.getYear()+1900));
-		request.setAttribute("fFin",fFin.getDate()+"/"+((Integer)fFin.getMonth()+1)+"/"+((Integer)fFin.getYear()+1900));
+			request.setAttribute("name", mapPortal.get("name"));
+			request.setAttribute("id", portalID);
 		
-		if(equalsDates(fInicio, new Date()) || equalsDates(fFin, new Date()))
-			executeGetData(request, gaServiceTemp, fInicio, fFin, portalID);
-		else
-			executeGetData(request, gaServicePermanent, fInicio, fFin, portalID);
+			request.setAttribute("fInicio",fInicio.getDate()+"/"+((Integer)fInicio.getMonth()+1)+"/"+((Integer)fInicio.getYear()+1900));
+			request.setAttribute("fFin",fFin.getDate()+"/"+((Integer)fFin.getMonth()+1)+"/"+((Integer)fFin.getYear()+1900));
+		
+			if(equalsDates(fInicio, new Date()) || equalsDates(fFin, new Date()))
+				executeGetData(request, gaServiceTemp, fInicio, fFin, portalID);
+			else
+				executeGetData(request, gaServicePermanent, fInicio, fFin, portalID);
+		}
 	}
 		
 	

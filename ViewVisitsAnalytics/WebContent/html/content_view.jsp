@@ -21,32 +21,37 @@
 	</div>
 	
 	<%
-	
+	if(map.get("idGoogleAnalytics")!=null && !map.get("idGoogleAnalytics").isEmpty()){
 	%>
 	<form class="form-horizontal"
 		action="<portlet:actionURL></portlet:actionURL>" method="post">
 		<div class="form-group">
 			<label for="name" class="col-sm-2">Sitio Web</label>
 		<div class="col-sm-6">
-			<input class="form-control" id="name" name="name" type="text" value="  <%=map.get("name") %>" readonly>
+			<input class="form-control" id="name" name="name" type="text" value="    <%=map.get("name") %>" readonly>
 		</div>
 		</div>
 		<div class="form-group">
 			<label for="inicio" class="col-sm-2">Inicio</label>
 			<div class="col-sm-6">
 				<input id="datepicker_start" name="fecha_inicio"
-					class="form-control" placeholder="Fecha inicial">
+					class="form-control" placeholder="Fecha inicial" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="fin" class="col-sm-2">Fin</label>
 			<div class="col-sm-6">
 				<input id="datepicker_end" class="form-control" name="fecha_fin"
-					placeholder="Fecha final">
+					placeholder="Fecha final" required>
 			</div>
 		</div>
 		<input type="submit" class="btn btn-primary" value="Consultar" />
 	</form>
+	<%}else{ %>
+	<div class="alert alert-danger" role="alert">
+	No se ha definido un UA para el sitio en el que está...
+	</div>
+	<%} %>
 </div>
 <%
 	if (renderRequest.getAttribute("id") != null) {
@@ -75,7 +80,6 @@
 		class="btn btn-primary" value="Los más visto" />
 	<div id="paginas_visitas" style="display: none;">
 		<hr>
-		<h3>Lo más visto</h3>
 		<table class="table">
 			<tr>
 				<th>Página</th>

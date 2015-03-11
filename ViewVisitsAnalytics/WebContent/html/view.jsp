@@ -22,7 +22,8 @@
 		<div class="form-group">
 			<label for="portal" class="col-sm-2">Sitio Web</label>
 			<div class="col-sm-6">
-				<select class="form-control" name="portal" id="portal">
+				<select class="form-control" name="portal" id="portal" required>
+					<option value="" disabled selected>Selecciona un sitio web</option>
 					<%
 						for (String portal : map.keySet()) {
 					%>
@@ -37,14 +38,14 @@
 			<label for="inicio" class="col-sm-2">Inicio</label>
 			<div class="col-sm-6">
 				<input id="datepicker_start" name="fecha_inicio"
-					class="form-control" placeholder="Fecha inicial">
+					class="form-control" placeholder="Fecha inicial" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="fin" class="col-sm-2">Fin</label>
 			<div class="col-sm-6">
 				<input id="datepicker_end" class="form-control" name="fecha_fin"
-					placeholder="Fecha final">
+					placeholder="Fecha final" required>
 			</div>
 		</div>
 		<input type="submit" class="btn btn-primary" value="Consultar" />
@@ -77,7 +78,6 @@
 		class="btn btn-primary" value="Los más visto" />
 	<div id="paginas_visitas" style="display: none;">
 		<hr>
-		<h3>Lo más visto</h3>
 		<table class="table">
 			<tr>
 				<th>Página</th>

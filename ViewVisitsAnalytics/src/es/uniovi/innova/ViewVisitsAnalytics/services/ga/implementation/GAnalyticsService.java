@@ -1,4 +1,4 @@
-package main.java.es.uniovi.innova.services.ga.implementation;
+package es.uniovi.innova.ViewVisitsAnalytics.services.ga.implementation;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import main.java.es.uniovi.innova.services.ga.IGAService;
+
 
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -34,6 +34,8 @@ import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 import com.google.api.services.analytics.model.Profiles;
 import com.google.api.services.analytics.model.Webproperties;
 import com.google.api.services.analytics.model.Webproperty;
+
+import es.uniovi.innova.ViewVisitsAnalytics.services.ga.IGAService;
 
 /**
  * Class for getting information provided for Google Analytics

@@ -1,10 +1,11 @@
-package main.java.es.uniovi.innova;
+package es.uniovi.innova.ViewVisitsAnalytics;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
@@ -12,11 +13,13 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import main.java.es.uniovi.innova.services.ga.IGAService;
-import main.java.es.uniovi.innova.services.portal.IPortalesService;
-import main.java.es.uniovi.innova.factory.Factory;
+
+import es.uniovi.innova.ViewVisitsAnalytics.factory.Factory;
+import es.uniovi.innova.ViewVisitsAnalytics.services.ga.IGAService;
+import es.uniovi.innova.ViewVisitsAnalytics.services.portal.IPortalesService;
 
 public class VisitsPortlet extends GenericPortlet {
 	

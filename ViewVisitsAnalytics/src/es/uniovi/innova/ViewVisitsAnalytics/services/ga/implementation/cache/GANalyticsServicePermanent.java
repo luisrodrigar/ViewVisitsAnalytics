@@ -1,13 +1,15 @@
-package main.java.es.uniovi.innova.services.ga.implementation.cache;
+package es.uniovi.innova.ViewVisitsAnalytics.services.ga.implementation.cache;
 
 import java.util.Date;
 import java.util.Map;
 
-import main.java.es.uniovi.innova.services.ga.implementation.GAnalyticsService;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
+
+import es.uniovi.innova.ViewVisitsAnalytics.services.ga.implementation.GAnalyticsService;
 
 public class GANalyticsServicePermanent extends GAnalyticsService {
 	

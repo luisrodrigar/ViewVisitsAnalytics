@@ -1,4 +1,4 @@
-package main.java.es.uniovi.innova.services.portal;
+package es.uniovi.innova.ViewVisitsAnalytics.services.portal;
 
 import java.util.Map;
 

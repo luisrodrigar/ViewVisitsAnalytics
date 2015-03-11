@@ -1,10 +1,11 @@
-package main.java.es.uniovi.innova.services.ga.implementation;
+package es.uniovi.innova.ViewVisitsAnalytics.services.ga.implementation;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import main.java.es.uniovi.innova.services.ga.IGAService;
+import es.uniovi.innova.ViewVisitsAnalytics.services.ga.IGAService;
+
 
 public class GAMockService implements IGAService {
 

@@ -1,4 +1,4 @@
-package main.java.es.uniovi.innova.services.ga;
+package es.uniovi.innova.ViewVisitsAnalytics.services.ga;
 
 import java.util.Date;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package main.java.es.uniovi.innova.services.portal.implementation;
+package es.uniovi.innova.ViewVisitsAnalytics.services.portal.implementation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,11 +6,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
-import main.java.es.uniovi.innova.services.portal.IPortalesService;
 import com.liferay.portal.SystemException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import es.uniovi.innova.ViewVisitsAnalytics.services.portal.IPortalesService;
+
 public class APILiferayPortalesDAO implements IPortalesService {
 
 	final static Logger log = LoggerFactory.getLogger(APILiferayPortalesDAO.class);
@@ -37,9 +38,7 @@ public class APILiferayPortalesDAO implements IPortalesService {
 	}
 
 	@Override
-	@Cacheable(value = "portalCache", key = "#root.methodName.concat(#themeDisplay.toString())")
 	public Map<String, String> getPortalContent(ThemeDisplay themeDisplay) {
-		log.info("Portal cache || getting content website portal");
 		Map<String, String> mapPortal = new HashMap<String, String>();
 		Group group = themeDisplay.getScopeGroup();
 		mapPortal.put("name", group.getDescriptiveName());

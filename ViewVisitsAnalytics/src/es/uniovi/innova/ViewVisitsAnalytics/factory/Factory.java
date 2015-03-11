@@ -1,7 +1,8 @@
-package main.java.es.uniovi.innova.factory;
+package es.uniovi.innova.ViewVisitsAnalytics.factory;
 
-import main.java.es.uniovi.innova.services.ga.IGAService;
-import main.java.es.uniovi.innova.services.portal.IPortalesService;
+import es.uniovi.innova.ViewVisitsAnalytics.services.ga.IGAService;
+import es.uniovi.innova.ViewVisitsAnalytics.services.portal.IPortalesService;
+
 
 public class Factory {
 	private IGAService serviceGoggleAnalyticsTemp;

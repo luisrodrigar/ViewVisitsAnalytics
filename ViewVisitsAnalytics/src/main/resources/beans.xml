@@ -14,12 +14,12 @@
 
 
 	<bean id="permanent"
-		class="main.java.es.uniovi.innova.services.ga.implementation.cache.GANalyticsServicePermanent"></bean>
+		class="es.uniovi.innova.ViewVisitsAnalytics.services.ga.implementation.cache.GANalyticsServicePermanent"></bean>
 	<bean id="temp"
-		class="main.java.es.uniovi.innova.services.ga.implementation.cache.GANalyticsServiceTemp"></bean>
+		class="es.uniovi.innova.ViewVisitsAnalytics.services.ga.implementation.cache.GANalyticsServiceTemp"></bean>
 	<bean id="aPILiferayPortalesDAO"
-		class="main.java.es.uniovi.innova.services.portal.implementation.APILiferayPortalesDAO"></bean>
-	<bean id="factory" class="main.java.es.uniovi.innova.factory.Factory">
+		class="es.uniovi.innova.ViewVisitsAnalytics.services.portal.implementation.APILiferayPortalesDAO"></bean>
+	<bean id="factory" class="es.uniovi.innova.ViewVisitsAnalytics.factory.Factory">
 		<property name="serviceGoggleAnalyticsTemp" ref="temp"></property>
 		<property name="serviceGoggleAnalyticsPermanent" ref="permanent"></property>
 		<property name="servicePortales" ref="aPILiferayPortalesDAO"></property>
